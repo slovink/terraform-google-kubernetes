@@ -20,7 +20,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "node_pool" {
-  provider = google-beta
+  # provider = google-beta
 
   name               = module.labels.id
   project            = var.project_id
