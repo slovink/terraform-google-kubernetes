@@ -60,13 +60,3 @@ resource "google_container_node_pool" "node_pool" {
   }
 }
 
-resource "null_resource" "configure_kubectl" {
-  provisioner "local-exec" {
-    command = "gcloud container clusters get-credentials ${var.cluster_name} --region ${var.region} --project ${var.project_id}"
-
-    environment = {
-      KUBECONFIG = var.kubectl_config_path != "" ? var.kubectl_config_path : ""
-    }
-  }
-  depends_on = [google_container_node_pool.node_pool]
-}
