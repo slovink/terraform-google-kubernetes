@@ -15,5 +15,5 @@ output "cluster_ca_certificate" {
 }
 
 output "kubeconfig" {
-  value = google_container_cluster.primary.kube_master_auth[0].client_certificate_config[0].client_certificate
+  value = google_container_cluster.primary[0].kube_master_auth[0].client_certificate_config[0].client_certificate
 }
