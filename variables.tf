@@ -188,3 +188,15 @@ variable "gke_version" {
   description = "The minimum version of the master. "
 
 }
+
+variable "enable_private_nodes" {
+  description = "Set to true to disable public IP addresses for nodes."
+  type        = bool
+  default     = true
+}
+
+variable "enable_private_endpoint" {
+  description = "Set to true to enable private endpoint for the cluster."
+  type        = bool
+  default     = true
+}
