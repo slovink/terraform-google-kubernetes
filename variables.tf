@@ -1,3 +1,9 @@
+variable "name" {
+  type        = string
+  default     = "test"
+  description = "Name of the resource. Provided by the client when the resource is created. "
+}
+
 variable "environment" {
   type        = string
   default     = ""
@@ -6,14 +12,20 @@ variable "environment" {
 
 variable "label_order" {
   type        = list(any)
-  default     = []
+  default     = ["name", "environment"]
   description = "Label order, e.g. sequence of application name and environment `name`,`environment`,'attribute' [`webserver`,`qa`,`devops`,`public`,] ."
 }
 
-variable "name" {
+variable "managedby" {
   type        = string
-  default     = ""
-  description = "Name of the resource. Provided by the client when the resource is created. "
+  default     = "slovink"
+  description = "ManagedBy, eg 'slovink'."
+}
+
+variable "repository" {
+  type        = string
+  default     = "https://github.com/slovink/terraform-google-kubernetes"
+  description = "Terraform current module repo"
 }
 
 variable "module_enabled" {
@@ -22,7 +34,7 @@ variable "module_enabled" {
   description = "Flag to control the service_account_enabled creation."
 }
 
-variable "google_container_cluster_enabled" {
+variable "cluster_enabled" {
   type        = bool
   default     = true
   description = "Flag to control the cluster_enabled creation."
@@ -42,19 +54,7 @@ variable "remove_default_node_pool" {
 
 variable "initial_node_count" {
   type        = number
-  default     = 1
-  description = "The number of nodes to create in this cluster's default node pool."
-}
-
-variable "google_container_node_pool_enabled" {
-  type        = bool
-  default     = true
-  description = "Flag to control the cluster_enabled creation."
-}
-
-variable "node_count" {
-  type        = number
-  default     = 1
+  default     = 0
   description = "The number of nodes to create in this cluster's default node pool."
 }
 
@@ -64,87 +64,83 @@ variable "service_account" {
   description = "The Google Cloud Platform Service Account to be used by the node VMs created by GKE Autopilot or NAP."
 }
 
-variable "project" {
-  type        = string
-  default     = ""
-  description = "The project ID to host the cluster in"
-
-}
-
-variable "cluster" {
-  type        = string
-  default     = ""
-  description = "The cluster to create the node pool for."
-
-}
-
-######################### Autoscaling ###########################
 variable "min_node_count" {
-  type    = number
-  default = 2
+  type        = number
+  default     = 1
+  description = "Minimum number of nodes in the cluster."
 }
 
 variable "max_node_count" {
-  type    = number
-  default = 7
+  type        = number
+  default     = 1
+  description = "Maximum number of nodes in the cluster."
 }
 
 variable "location_policy" {
-  type    = string
-  default = "BALANCED"
+  type        = string
+  default     = "BALANCED"
+  description = "Specifies the policy for distributing nodes across locations, with the default being BALANCED"
 }
 
-######################### management ###########################
 variable "auto_repair" {
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
+  description = "Enables or disables automatic repair of nodes in the cluster."
 }
 
 variable "auto_upgrade" {
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
+  description = "Enables or disables automatic upgrades of nodes in the cluster."
 }
 
-######################### node_config ###########################
 variable "image_type" {
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
+  description = "Type of image to use for the nodes in the cluster."
 }
 
-variable "machine_type" {
-  type    = string
-  default = ""
+variable "machine_type"
+{
+  type        = string
+  default     = ""
+  description = "Specifies the machine type for the nodes in the cluster."
 }
 
 variable "disk_size_gb" {
-  type    = number
-  default = 50
+  type        = number
+  default     = 10
+  description = " Size of the disk in gigabytes for each node in the cluster."
 }
 
 variable "disk_type" {
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
+  description = " Type of disk to use for the nodes in the cluster."
 }
 
 variable "preemptible" {
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
+  description = "Specifies whether the nodes in the cluster should be preemptible."
 }
 
-######################### timeouts ###########################
 variable "cluster_create_timeouts" {
-  type    = string
-  default = "30m"
+  type        = string
+  default     = "30m"
+  description = "Timeout for creating the cluster."
 }
 
 variable "cluster_update_timeouts" {
-  type    = string
-  default = "30m"
+  type        = string
+  default     = "30m"
+  description = "Timeout for updating the cluster."
 }
 
 variable "cluster_delete_timeouts" {
-  type    = string
-  default = "30m"
+  type        = string
+  default     = "30m"
+  description = "Timeout for deleting the cluster."
 }
 
 variable "kubectl_config_path" {
@@ -153,50 +149,35 @@ variable "kubectl_config_path" {
   default     = ""
 }
 
-variable "cluster_name" {
-  type    = string
-  default = ""
-}
-
-variable "project_id" {
-  type        = string
-  default     = ""
-  description = "Google Cloud project ID"
-}
-
-variable "region" {
-  type        = string
-  default     = ""
-  description = "Google Cloud region"
-}
 variable "network" {
   type        = string
   default     = ""
   description = "A reference (self link) to the VPC network to host the cluster in"
-
 }
 
 variable "subnetwork" {
   type        = string
   default     = ""
   description = "A reference (self link) to the subnetwork to host the cluster in"
-
 }
-variable "gke_version" {
+
+variable "min_master_version" {
   type        = string
   default     = ""
   description = "The minimum version of the master. "
-
 }
 
+# Pod range for network configuration
+variable "pod_range" {
+  description = "The range of pod IPs for the network"
+  type        = string
+  default     = ""  # Optional, can be left empty if no pod range is specified
+}
+
+# Enable private nodes or not
 variable "enable_private_nodes" {
-  description = "Set to true to disable public IP addresses for nodes."
+  description = "Whether to enable private nodes for the node pool"
   type        = bool
-  default     = true
+  default     = false
 }
 
-variable "enable_private_endpoint" {
-  description = "Set to true to enable private endpoint for the cluster."
-  type        = bool
-  default     = true
-}

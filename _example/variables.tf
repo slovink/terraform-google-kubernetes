@@ -12,7 +12,7 @@ variable "label_order" {
 
 variable "gcp_project_id" {
   type        = string
-  default     = ""
+  default     = "soy-smile-435017-c5"
   description = "Google Cloud project ID"
 }
 
