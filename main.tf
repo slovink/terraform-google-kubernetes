@@ -19,7 +19,7 @@ resource "google_container_cluster" "primary" {
   initial_node_count       = var.initial_node_count
   min_master_version       = var.min_master_version
 
-  private_cluster_config {
+  private_cluster_config {cypik
     enable_private_nodes    = true
     enable_private_endpoint = false
     master_ipv4_cidr_block  = "10.0.0.0/28"
@@ -45,7 +45,6 @@ resource "google_container_cluster" "primary" {
   lifecycle {
     ignore_changes = [initial_node_count]
   }
-}
 
 
 
@@ -97,6 +96,12 @@ resource "google_container_node_pool" "node_pool" {
     update = var.cluster_update_timeouts
     delete = var.cluster_delete_timeouts
   }
+}
+
+resource "google_compute_address" "address" {
+  name        = "address"
+  region      = var.region
+  network_tier = "STANDARD" # Change to Standard tier
 }
 
 

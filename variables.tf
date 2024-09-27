@@ -108,7 +108,12 @@ variable "machine_type"
 }
 
 variable "disk_size_gb" {
-  type        = number
+  type        = numberresource "google_compute_address" "example_ip" {
+  name        = "example-ip"
+  region      = var.region
+  network_tier = "STANDARD" # Change to Standard tier
+}
+
   default     = 10
   description = " Size of the disk in gigabytes for each node in the cluster."
 }
@@ -166,6 +171,11 @@ variable "min_master_version" {
   default     = ""
   description = "The minimum version of the master. "
 }
+resource "google_compute_address" "example_ip" {
+  name        = "example-ip"
+  region      = var.region
+  network_tier = "STANDARD" # Change to Standard tier
+}
 
 # Pod range for network configuration
 variable "pod_range" {
@@ -181,3 +191,7 @@ variable "enable_private_nodes" {
   default     = false
 }
 
+variable "region" {
+  type = string
+  default = ""
+}
