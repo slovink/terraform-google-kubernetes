@@ -46,6 +46,7 @@ resource "google_container_node_pool" "node_pool" {
     disk_size_gb   = var.disk_size_gb
     disk_type       = var.disk_type
     preemptible     = var.preemptible
+    enable_private_nodes = true
   }
 
   lifecycle {
