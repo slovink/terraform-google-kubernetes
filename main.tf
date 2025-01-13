@@ -28,16 +28,16 @@ resource "google_container_node_pool" "node_pool" {
   cluster            = join("", google_container_cluster.primary.*.id)
   node_count         =  var.node_count
 
-  # autoscaling {
-  #   min_node_count  = var.min_node_count
-  #   max_node_count  = var.max_node_count
-  #   location_policy = var.location_policy
-  # }
+   autoscaling {
+     min_node_count  = var.min_node_count
+     max_node_count  = var.max_node_count
+     location_policy = var.location_policy
+   }
 
-  # management {
-  #   auto_repair  = var.auto_repair
-  #   auto_upgrade = var.auto_upgrade
-  # }
+   management {
+     auto_repair  = var.auto_repair
+     auto_upgrade = var.auto_upgrade
+   }
 
   node_config {
     # image_type      = var.image_type

@@ -31,7 +31,7 @@ module "subnet" {
   project_id                         = ""
   private_ip_google_access           = true
   allow                              = [{ "protocol" : "tcp", "ports" : ["1-65535"] }]
-  source_ranges                      = ["10.10.0.0/16"]
+  ip_cidr_range                     = ["10.10.0.0/16"]
   asn                                = 64514
   nat_ip_allocate_option             = "MANUAL_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
@@ -50,7 +50,7 @@ module "Service-account" {
   environment = var.environment
   label_order = var.label_order
 
-  service_account_enabled = true
+  service_account_enabled = ture
 }
 
 module "gke" {
@@ -61,7 +61,7 @@ module "gke" {
   label_order                        = var.label_order
 
   network                            = module.vpc.vpc_id
-  subnetwork                         = module.subnet.id
+  subnetwork                         = module.subnet.subnet_id
   module_enabled                     = true
   google_container_cluster_enabled   = true
   location                           = "europe-west3"
@@ -70,6 +70,8 @@ module "gke" {
   initial_node_count                 = 1
   google_container_node_pool_enabled = true
   node_count                         = 1
+  min_node_count                     = 1 # AutoScaling
+  max_node_count                     = 7 # Autoscaling
   cluster_name                       = "test-gke"
   project_id                         = var.gcp_project_id
   region                             = var.gcp_region

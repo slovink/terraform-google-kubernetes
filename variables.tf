@@ -82,11 +82,13 @@ variable "cluster" {
 variable "min_node_count" {
   type    = number
   default = 2
+  description = "Minimum number of nodes in the node pool"
 }
 
 variable "max_node_count" {
   type    = number
   default = 7
+  description = "Maximum number of the nodes in the node pool"
 }
 
 variable "location_policy" {
@@ -98,11 +100,13 @@ variable "location_policy" {
 variable "auto_repair" {
   type    = bool
   default = true
+  description = "Enable auto repair for nodes"
 }
 
 variable "auto_upgrade" {
   type    = bool
   default = true
+  description = "Enable auto upgrade for nodes"
 }
 
 ######################### node_config ###########################
@@ -169,6 +173,12 @@ variable "region" {
   default     = ""
   description = "Google Cloud region"
 }
+
+variable "gcp_zone" {
+  type = string
+  default = ""
+}
+
 variable "network" {
   type        = string
   default     = ""
