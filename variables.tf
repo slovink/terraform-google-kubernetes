@@ -112,12 +112,12 @@ variable "auto_upgrade" {
 ######################### node_config ###########################
 variable "image_type" {
   type    = string
-  default = ""
+  default = "UBUNTU_CONTAINERD"
 }
 
 variable "machine_type" {
   type    = string
-  default = "e2-medium"
+  default = "machine_type"
 }
 
 variable "disk_size_gb" {
@@ -127,7 +127,7 @@ variable "disk_size_gb" {
 
 variable "disk_type" {
   type    = string
-  default = ""
+  default = "pd-standard"
 }
 
 variable "preemptible" {
@@ -195,7 +195,7 @@ variable "subnetwork" {
 }
 variable "gke_version" {
   type        = string
-  default     = ""
+  default     = "1.30.6-gke.1125000"
   description = "The minimum version of the master. "
 
 }
