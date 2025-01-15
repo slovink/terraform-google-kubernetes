@@ -74,7 +74,6 @@ module "gke" {
   max_node_count                     = 7 # Autoscaling
   cluster_name                       = "test-gke"
   project_id                         = var.gcp_project_id
-  region                             = var.gcp_region
   service_account                    = ""
 
 }

@@ -48,6 +48,8 @@ resource "google_container_node_pool" "node_pool" {
     preemptible     = var.preemptible
   }
 
+
+
   network_config {
         enable_private_nodes = true
   }
