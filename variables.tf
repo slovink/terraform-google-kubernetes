@@ -117,7 +117,7 @@ variable "image_type" {
 
 variable "machine_type" {
   type    = string
-  default = "machine_type"
+  default = "e2-medium"
 }
 
 variable "disk_size_gb" {
