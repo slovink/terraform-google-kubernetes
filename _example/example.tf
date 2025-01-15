@@ -64,7 +64,7 @@ module "gke" {
   subnetwork                         = module.subnet.subnet_id
   module_enabled                     = true
   google_container_cluster_enabled   = true
-  location                           = "europe-west3"
+  location                           = "europe-west3-a"
   remove_default_node_pool           = false
   gke_version                        = "1.25.6-gke.1000"
   initial_node_count                 = 1
