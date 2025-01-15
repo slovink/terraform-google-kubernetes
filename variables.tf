@@ -199,8 +199,3 @@ variable "gke_version" {
   description = "The minimum version of the master. "
 
 }
-
-variable "node_version" {
-  type = string
-  default = "1.30.6-gke.1125000"
-}

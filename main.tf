@@ -27,6 +27,7 @@ resource "google_container_node_pool" "node_pool" {
   location           = var.location
   cluster            = join("", google_container_cluster.primary.*.id)
   node_count         =  var.node_count
+  gke_version        = var.gke_version
 
    autoscaling {
      min_node_count  = var.min_node_count
@@ -46,7 +47,6 @@ resource "google_container_node_pool" "node_pool" {
     disk_size_gb   = var.disk_size_gb
     disk_type       = var.disk_type
     preemptible     = var.preemptible
-    node_version    = var.gke_version
 
 
   }
