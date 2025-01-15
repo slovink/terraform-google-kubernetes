@@ -117,7 +117,7 @@ variable "image_type" {
 
 variable "machine_type" {
   type    = string
-  default = ""
+  default = "e2-medium"
 }
 
 variable "disk_size_gb" {
@@ -150,6 +150,7 @@ variable "cluster_delete_timeouts" {
   type    = string
   default = "30m"
 }
+
 
 variable "kubectl_config_path" {
   description = "Path to the kubectl config file. Defaults to $HOME/.kube/config"
