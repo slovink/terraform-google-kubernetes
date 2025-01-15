@@ -202,6 +202,6 @@ variable "gke_version" {
 
 variable "node_version" {
   type        = string
-  default     = ""
+  default     = "1.30.6-gke.1125000"
   description = ""
 }
