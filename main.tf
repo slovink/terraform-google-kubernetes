@@ -39,11 +39,11 @@ resource "google_container_node_pool" "node_pool" {
    }
 
   node_config {
-    image_type      = UBUNTU_CONTAINERD
-    machine_type    = e2-medium
+    image_type      = "UBUNTU_CONTAINERD"
+    machine_type    = "e2-medium"
     service_account = var.service_account
-    disk_size_gb    = 50
-    disk_type       = pd-standard
+    disk_size_gb    = "50"
+    disk_type       = "pd-standard"
     preemptible     = var.preemptible
   }
 
