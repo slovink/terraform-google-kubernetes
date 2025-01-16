@@ -81,7 +81,7 @@ variable "cluster" {
 ######################### Autoscaling ###########################
 variable "min_node_count" {
   type    = number
-  default = 2
+  default = 4
   description = "Minimum number of nodes in the node pool"
 }
 
