@@ -59,21 +59,21 @@ module "gke" {
   name                               = "gke"
   environment                        = var.environment
   label_order                        = var.label_order
-
   network                            = module.vpc.vpc_id
   subnetwork                         = module.subnet.subnet_id
   module_enabled                     = true
   google_container_cluster_enabled   = true
-  location                           = "europe-west3-a"
+  location                           = "europe-west3"
   remove_default_node_pool           = false
   gke_version                        = "1.25.6-gke.1000"
   initial_node_count                 = 1
   google_container_node_pool_enabled = true
   node_count                         = 1
-  min_node_count                     = 1 # AutoScaling
-  max_node_count                     = 7 # Autoscaling
+  min_node_count                     = 1
+  max_node_count                     = 7
   cluster_name                       = "test-gke"
   project_id                         = var.gcp_project_id
+  region                             = var.gcp_region
   service_account                    = ""
 
 }

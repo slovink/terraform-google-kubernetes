@@ -20,14 +20,12 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "node_pool" {
-  # provider = google-beta
-
-  name               = module.labels.id
-  project            = var.project_id
-  location           = var.location
-  cluster            = join("", google_container_cluster.primary.*.id)
-#  node_count         =  var.node_count
-  initial_node_count = var.node_count
+  count          = var.google_container_cluster_enabled && var.module_enabled ? 1 : 0
+  name           = module.labels.id
+  location       = var.location
+  project        = var.project_id
+  cluster        = join("", google_container_cluster.primary[*].id)
+  initial_node_count = var.initial_node_count
 
    autoscaling {
      min_node_count  = var.min_node_count
@@ -47,13 +45,13 @@ resource "google_container_node_pool" "node_pool" {
     disk_size_gb    = var.disk_size_gb
     disk_type       = var.disk_type
     preemptible     = var.preemptible
+    node_version    = var.node_version
   }
-
-
 
   network_config {
         enable_private_nodes = true
   }
+
 
   lifecycle {
     ignore_changes        = [initial_node_count]
