@@ -20,47 +20,39 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "node_pool" {
-  count          = var.google_container_cluster_enabled && var.module_enabled ? 1 : 0
-  name           = module.labels.id
-  location       = var.location
-  project        = var.project_id
-  cluster        = join("", google_container_cluster.primary[*].id)
+  name               = format("%s", module.labels.id)
+  project            = var.project_id
+  location           = var.location
+  cluster            = join("", google_container_cluster.primary[*].id)
   initial_node_count = var.initial_node_count
 
-   autoscaling {
-     min_node_count  = var.min_node_count
-     max_node_count  = var.max_node_count
-     location_policy = var.location_policy
-   }
+  autoscaling {
+    min_node_count  = var.min_node_count
+    max_node_count  = var.max_node_count
+    location_policy = var.location_policy
+  }
 
-   management {
-     auto_repair  = var.auto_repair
-     auto_upgrade = var.auto_upgrade
-   }
+  management {
+    auto_repair  = var.auto_repair
+    auto_upgrade = var.auto_upgrade
+  }
 
   node_config {
-    image_type      = "UBUNTU_CONTAINERD"
-    machine_type    = "e2-medium"
+    image_type      = var.image_type
+    machine_type    = var.machine_type
     service_account = var.service_account
-    disk_size_gb    = "50"
-    disk_type       = "pd-standard"
+    disk_size_gb    = var.disk_size_gb
+    disk_type       = var.disk_type
     preemptible     = var.preemptible
   }
-
-  network_config {
-        enable_private_nodes = true
-  }
-
 
   lifecycle {
     ignore_changes        = [initial_node_count]
     create_before_destroy = false
   }
-
   timeouts {
     create = var.cluster_create_timeouts
     update = var.cluster_update_timeouts
     delete = var.cluster_delete_timeouts
   }
 }
-

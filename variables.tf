@@ -1,3 +1,4 @@
+
 variable "environment" {
   type        = string
   default     = ""
@@ -81,14 +82,12 @@ variable "cluster" {
 ######################### Autoscaling ###########################
 variable "min_node_count" {
   type    = number
-  default = 4
-  description = "Minimum number of nodes in the node pool"
+  default = 2
 }
 
 variable "max_node_count" {
   type    = number
   default = 7
-  description = "Maximum number of the nodes in the node pool"
 }
 
 variable "location_policy" {
@@ -100,24 +99,22 @@ variable "location_policy" {
 variable "auto_repair" {
   type    = bool
   default = true
-  description = "Enable auto repair for nodes"
 }
 
 variable "auto_upgrade" {
   type    = bool
   default = true
-  description = "Enable auto upgrade for nodes"
 }
 
 ######################### node_config ###########################
 variable "image_type" {
   type    = string
-  default = "UBUNTU_CONTAINERD"
+  default = ""
 }
 
 variable "machine_type" {
   type    = string
-  default = "e2-medium"
+  default = ""
 }
 
 variable "disk_size_gb" {
@@ -127,7 +124,7 @@ variable "disk_size_gb" {
 
 variable "disk_type" {
   type    = string
-  default = "pd-standard"
+  default = ""
 }
 
 variable "preemptible" {
@@ -151,7 +148,6 @@ variable "cluster_delete_timeouts" {
   default = "30m"
 }
 
-
 variable "kubectl_config_path" {
   description = "Path to the kubectl config file. Defaults to $HOME/.kube/config"
   type        = string
@@ -174,12 +170,6 @@ variable "region" {
   default     = ""
   description = "Google Cloud region"
 }
-
-variable "gcp_zone" {
-  type = string
-  default = ""
-}
-
 variable "network" {
   type        = string
   default     = ""
@@ -195,13 +185,7 @@ variable "subnetwork" {
 }
 variable "gke_version" {
   type        = string
-  default     = "1.30.6-gke.1125000"
+  default     = ""
   description = "The minimum version of the master. "
 
-}
-
-variable "node_version" {
-  type        = string
-  default     = "1.30.6-gke.1125000"
-  description = ""
 }
