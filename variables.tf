@@ -81,7 +81,7 @@ variable "cluster" {
 ######################### Autoscaling ###########################
 variable "min_node_count" {
   type    = number
-  default = 4
+  default = 7
 }
 
 variable "max_node_count" {

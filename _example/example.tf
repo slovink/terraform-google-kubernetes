@@ -61,7 +61,7 @@ module "gke" {
   label_order                        = var.label_order
 
   network                            = module.vpc.vpc_id
-  subnetwork                         = module.subnet.id
+  subnetwork                         = module.subnet.subnet_id
   module_enabled                     = true
   google_container_cluster_enabled   = true
   location                           = "europe-west3"
