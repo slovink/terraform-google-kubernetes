@@ -57,11 +57,7 @@ resource "google_container_node_pool" "node_pool" {
     tags            = ["gke-node"]
     labels = {
       environment = "prod"
-    }
-    workload_metadata_config {
-        mode = "GKE_METADATA"  # Explicitly set metadata mode (alternatively "GCE_METADATA")
-      }
-    
+    }    
 
   }
 
