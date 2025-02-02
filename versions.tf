@@ -8,7 +8,7 @@ terraform {
     }
     null = {
       source  = "hashicorp/null"
-      version = "5.45.1"
+      version = "3.2.2"
     }
   }
 }
