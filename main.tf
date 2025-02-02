@@ -62,6 +62,11 @@ resource "google_container_node_pool" "node_pool" {
 
   }
 
+  workload_metadata_config {
+      mode = "GKE_METADATA"  # Explicitly set metadata mode (alternatively "GCE_METADATA")
+    }
+  
+
   network_config {
         enable_private_nodes = true
   }
