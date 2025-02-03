@@ -61,11 +61,6 @@ resource "google_container_node_pool" "node_pool" {
 
   }
 
-
-  network_config {
-        enable_private_nodes = true
-  }
-
   lifecycle {
     ignore_changes        = [initial_node_count]
     create_before_destroy = false
