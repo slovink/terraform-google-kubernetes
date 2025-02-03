@@ -188,3 +188,10 @@ variable "gke_version" {
   description = "The minimum version of the master. "
 
 }
+
+variable "image_type" {
+  type        = string
+  default     = "UBUNTU_CONTAINERD"
+  description = "image type "
+
+}

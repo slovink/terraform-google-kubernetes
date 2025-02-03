@@ -62,7 +62,6 @@ resource "google_container_node_pool" "node_pool" {
   }
 
 
-
   network_config {
         enable_private_nodes = true
   }
