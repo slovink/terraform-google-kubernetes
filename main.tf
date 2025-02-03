@@ -28,15 +28,11 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "node_pool" {
-  # provider = google-beta
-
-  name               = module.labels.id
-  project            = var.project_id
+  name               = format("%s", module.labels.id)
+  project            = data.google_client_config.current.project
   location           = var.location
-  cluster            = join("", google_container_cluster.primary.*.id)
-  node_count         =  var.node_count
-  version            = var.gke_version
-  node_locations     = ["us-east1-b"]
+  cluster            = join("", google_container_cluster.primary[*].id)
+  initial_node_count = var.initial_node_count
 
   autoscaling {
     min_node_count  = var.min_node_count
@@ -53,31 +49,18 @@ resource "google_container_node_pool" "node_pool" {
     image_type      = var.image_type
     machine_type    = var.machine_type
     service_account = var.service_account
-    disk_size_gb   = var.disk_size_gb
+    disk_size_gb    = var.disk_size_gb
     disk_type       = var.disk_type
     preemptible     = var.preemptible
-
-    tags            = ["gke-node"]
-    labels = {
-      environment = "prod"
-    }    
-
-  }
-
-  upgrade_settings {
-    max_surge       = 1  # Number of extra nodes added during upgrade
-    max_unavailable = 0  # Number of unavailable nodes during upgrade
   }
 
   lifecycle {
-    ignore_changes = [node_count]
-    create_before_destroy = false
+    ignore_changes = [initial_node_count]
+    #    create_before_destroy = false
   }
-
   timeouts {
     create = var.cluster_create_timeouts
     update = var.cluster_update_timeouts
     delete = var.cluster_delete_timeouts
   }
 }
-
