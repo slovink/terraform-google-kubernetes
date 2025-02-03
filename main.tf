@@ -34,7 +34,7 @@ resource "google_container_node_pool" "node_pool" {
   location           = var.location
   cluster            = join("", google_container_cluster.primary.*.id)
   node_count         =  var.node_count
-  version            = var.gke_version
+  node_version            = var.gke_version
 
   autoscaling {
     min_node_count  = var.min_node_count
