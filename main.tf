@@ -52,6 +52,12 @@ resource "google_container_node_pool" "node_pool" {
     disk_size_gb    = var.disk_size_gb
     disk_type       = var.disk_type
     preemptible     = var.preemptible
+    kubelet_config {
+      cpu_manager_policy   = "static"
+      cpu_cfs_quota        = true
+      cpu_cfs_quota_period = "100us"
+      pod_pids_limit       = 1024
+}
   }
 
   lifecycle {
