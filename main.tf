@@ -63,7 +63,10 @@ resource "google_container_node_pool" "node_pool" {
 
   }
 
-
+  upgrade_settings {
+    max_surge       = 1  # Number of extra nodes added during upgrade
+    max_unavailable = 0  # Number of unavailable nodes during upgrade
+  }
 
   lifecycle {
     ignore_changes = [node_count]
