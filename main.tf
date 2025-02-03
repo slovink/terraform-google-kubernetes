@@ -34,7 +34,7 @@ resource "google_container_node_pool" "node_pool" {
   location           = var.location
   cluster            = join("", google_container_cluster.primary.*.id)
   node_count         =  var.node_count
-  node_version            = var.gke_version
+  version            = var.gke_version
   node_locations     = ["us-east1-b"]
 
   autoscaling {
@@ -63,13 +63,10 @@ resource "google_container_node_pool" "node_pool" {
 
   }
 
-  update_settings {
-    max_surge = 1
-    max_unavailable = 0
-  }
+
 
   lifecycle {
-ignore_changes = [node_count, node_version, image_type, labels]
+    ignore_changes = [node_count, image_type, labels]
     create_before_destroy = false
   }
 
