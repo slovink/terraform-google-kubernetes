@@ -107,8 +107,10 @@ variable "auto_upgrade" {
 
 ######################### node_config ###########################
 variable "image_type" {
-  type    = string
-  default = ""
+  type        = string
+  default     = "UBUNTU_CONTAINERD"
+  description = "image type "
+
 }
 
 variable "machine_type" {
@@ -189,9 +191,3 @@ variable "gke_version" {
 
 }
 
-variable "image_type" {
-  type        = string
-  default     = "UBUNTU_CONTAINERD"
-  description = "image type "
-
-}
