@@ -18,6 +18,20 @@ resource "google_container_cluster" "primary" {
   initial_node_count       = var.initial_node_count
   min_master_version       = var.gke_version
 
+  node_config {
+      image_type      = var.image_type
+      machine_type    = var.machine_type
+      service_account = var.service_account
+      disk_size_gb   = var.disk_size_gb
+      disk_type       = var.disk_type
+      preemptible     = var.preemptible
+
+      tags            = ["gke-node"]
+      labels = {
+        environment = "prod"
+      }    
+
+  }
   private_cluster_config {
       enable_private_nodes    = true
       enable_private_endpoint = false  # Master remains public
@@ -35,7 +49,7 @@ resource "google_container_node_pool" "node_pool" {
   cluster            = join("", google_container_cluster.primary.*.id)
   node_count         =  var.node_count
   node_version            = var.gke_version
-  node_locations     = ["us-east1-b"]
+
 
   autoscaling {
     min_node_count  = var.min_node_count
