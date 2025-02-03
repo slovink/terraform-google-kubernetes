@@ -29,7 +29,7 @@ resource "google_container_cluster" "primary" {
 
 resource "google_container_node_pool" "node_pool" {
   name               = format("%s", module.labels.id)
-  project            = data.google_client_config.current.project
+  project            = var.project_id
   location           = var.location
   cluster            = join("", google_container_cluster.primary[*].id)
   initial_node_count = var.initial_node_count
