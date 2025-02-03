@@ -54,6 +54,7 @@ resource "google_container_node_pool" "node_pool" {
     disk_size_gb   = var.disk_size_gb
     disk_type       = var.disk_type
     preemptible     = var.preemptible
+
     tags            = ["gke-node"]
     labels = {
       environment = "prod"
@@ -61,8 +62,13 @@ resource "google_container_node_pool" "node_pool" {
 
   }
 
+  update_settings {
+    max_surge = 1
+    max_unavailable = 0
+  }
+
   lifecycle {
-    ignore_changes        = [initial_node_count]
+    ignore_changes        = [node_count]
     create_before_destroy = false
   }
 
