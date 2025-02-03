@@ -17,6 +17,7 @@ resource "google_container_cluster" "primary" {
   remove_default_node_pool = var.remove_default_node_pool
   initial_node_count       = var.initial_node_count
   min_master_version       = var.gke_version
+  node_version             = var.gke_version
 
   private_cluster_config {
       enable_private_nodes    = true
@@ -27,14 +28,11 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "node_pool" {
-  # provider = google-beta
-
-  name               = module.labels.id
+  name               = format("%s", module.labels.id)
   project            = var.project_id
   location           = var.location
-  cluster            = join("", google_container_cluster.primary.*.id)
-  node_count         =  var.node_count
-  # node_version    = var.gke_version
+  cluster            = join("", google_container_cluster.primary[*].id)
+  initial_node_count = var.initial_node_count
 
   autoscaling {
     min_node_count  = var.min_node_count
@@ -48,28 +46,27 @@ resource "google_container_node_pool" "node_pool" {
   }
 
   node_config {
-    # image_type      = var.image_type
+    image_type      = var.image_type
     machine_type    = var.machine_type
     service_account = var.service_account
-    disk_size_gb   = var.disk_size_gb
+    disk_size_gb    = var.disk_size_gb
     disk_type       = var.disk_type
     preemptible     = var.preemptible
-
-  }
-
-  network_config {
-        enable_private_nodes = true
+    kubelet_config {
+      cpu_manager_policy   = "static"
+      cpu_cfs_quota        = true
+      cpu_cfs_quota_period = "100us"
+      pod_pids_limit       = 1024
+}
   }
 
   lifecycle {
-    ignore_changes        = [initial_node_count]
-    create_before_destroy = false
+    ignore_changes = [initial_node_count]
+    #    create_before_destroy = false
   }
-
   timeouts {
     create = var.cluster_create_timeouts
     update = var.cluster_update_timeouts
     delete = var.cluster_delete_timeouts
   }
 }
-
