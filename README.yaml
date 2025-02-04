@@ -1,0 +1,59 @@
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name : Terraform gke
+
+# License of this project
+license: "APACHE"
+
+# Canonical GitHub repo
+github_repo: git@github.com:slovink/terraform-google-gke.git
+
+
+# Badges to display
+badges:
+  - name: "Terraform"
+    image: "https://img.shields.io/badge/Terraform-v1.7.4-green"
+    url: "https://www.terraform.io"
+  - name: "Licence"
+    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
+    url: "https://github.com/slovink/terraform-google-gke/blob/master/LICENSE"
+  - name: "tfsec"
+    image: "https://github.com/slovink/terraform-google-gke/actions/workflows/tfsec.yml/badge.svg"
+    url: "https://github.com/slovink/terraform-google-gke/tree/master/.github/workflows/tfsec.yml"
+
+
+#  description of this project
+description: |-
+  This terraform module is designed to generate consistent label names and tags for resources. You can use terraform-gke to implement a strict naming convention.
+
+
+# extra content
+include:
+  - "terraform.md"
+# How to use this project
+usage : |-
+  ### Simple Example
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+    module "gke" {
+        source             = "git::git@github.com:slovink/terraform-google-gke.git?ref=v1.0.0"
+        name               = "ops"
+        environment        = "test"
+        region             = "asia-northeast1"
+        image_type         = "UBUNTU_CONTAINERD"
+        location           = "asia-northeast1"
+        min_master_version = "1.27.3-gke.100"
+        network            = module.vpc.vpc_id
+        subnetwork         = module.subnet.subnet_id
+        service_account    = module.service-account.account_email
+        initial_node_count = 1
+        min_node_count     = 1
+        max_node_count     = 1
+        disk_size_gb       = 20
+        cluster_enabled    = true
+  }
+  ```
