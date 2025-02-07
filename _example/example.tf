@@ -43,14 +43,13 @@ module "subnet" {
 }
 
 module "Service-account" {
-  source = "git::git@github.com:slovink/terraform-gcp-Service-account.git"
-
-
-  name        = "Service-account"
+  source = "git@github.com:krishna-yadav1/terraform-google-service-account"
+  service_account_enabled = true
+  name        = "service account"
   environment = var.environment
   label_order = var.label_order
+  roles = ["roles/iam.serviceAccountUser"]
 
-  service_account_enabled = true
 }
 
 module "gke" {
@@ -73,6 +72,6 @@ module "gke" {
   cluster_name                       = "test-gke"
   project_id                         = var.gcp_project_id
   region                             = var.gcp_region
-  service_account                    = ""
+  service_account                    = module.Service-account.account_email
 
 }
