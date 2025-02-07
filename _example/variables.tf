@@ -4,6 +4,12 @@ variable "environment" {
   description = "Environment name"
 }
 
+variable "name" {
+  type        = string
+  default     = ""
+  description = "Name of the resource. Provided by the client when the resource is created. "
+}
+
 variable "label_order" {
   type        = list(any)
   default     = ["name", "environment"]

@@ -43,9 +43,9 @@ module "subnet" {
 }
 
 module "Service-account" {
-  source = "git@github.com:krishna-yadav1/terraform-google-service-account"
+  source = "git@github.com:slovink/terraform-google-service-account.git"
   service_account_enabled = true
-  name        = "service account"
+  name        =var.name
   environment = var.environment
   label_order = var.label_order
   roles = ["roles/iam.serviceAccountUser"]
