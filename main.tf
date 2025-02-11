@@ -1,5 +1,5 @@
 module "labels" {
-  source = "git::https://github.com/slovink/terraform-google-labels.git"
+  source  = "git::https://github.com/slovink/terraform-google-labels.git"
 
   name        = var.name
   environment = var.environment
@@ -21,7 +21,7 @@ resource "google_container_cluster" "primary" {
 
   private_cluster_config {
     enable_private_nodes    = true
-    enable_private_endpoint = false # Master remains public
+    enable_private_endpoint = false  # Master remains public
     master_ipv4_cidr_block  = "172.16.0.0/28"
   }
 
@@ -52,13 +52,12 @@ resource "google_container_node_pool" "node_pool" {
     disk_size_gb    = var.disk_size_gb
     disk_type       = var.disk_type
     preemptible     = var.preemptible
-
-     kubelet_config {
+    kubelet_config {
       cpu_manager_policy   = "static"
       cpu_cfs_quota        = true
       cpu_cfs_quota_period = "100us"
       pod_pids_limit       = 1024
-     }
+    }
   }
 
   lifecycle {
