@@ -17,7 +17,7 @@ resource "google_container_cluster" "primary" {
   remove_default_node_pool = var.remove_default_node_pool
   initial_node_count       = var.initial_node_count
   min_master_version       = var.gke_version
-
+  node_version             = var.gke_version
 
   private_cluster_config {
     enable_private_nodes    = true
@@ -33,8 +33,6 @@ resource "google_container_node_pool" "node_pool" {
   location           = var.location
   cluster            = join("", google_container_cluster.primary[*].id)
   initial_node_count = var.initial_node_count
-  node_version             = var.gke_version
-
 
   autoscaling {
     min_node_count  = var.min_node_count
