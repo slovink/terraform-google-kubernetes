@@ -49,7 +49,7 @@ resource "google_container_node_pool" "node_pool" {
     image_type      = var.image_type
     machine_type    = var.machine_type
     service_account = var.service_account
-    disk_size_gb    = var.disk_size_gb
+    disk_size_gb    = 30
     disk_type       = var.disk_type
     preemptible     = var.preemptible
     kubelet_config {

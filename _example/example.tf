@@ -65,7 +65,7 @@ module "gke" {
   google_container_cluster_enabled   = true
   location                           = "europe-west3"
   remove_default_node_pool           = false
-  gke_version                        = "1.25.6-gke.1000"
+  gke_version                        = "1.31.5-gke.1068000"
   initial_node_count                 = 1
   google_container_node_pool_enabled = true
   node_count                         = 7
