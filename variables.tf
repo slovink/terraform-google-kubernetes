@@ -36,7 +36,7 @@ variable "location" {
 
 variable "remove_default_node_pool" {
   type        = bool
-  default     = false
+  default     = true
   description = "deletes the default node pool upon cluster creation."
 }
 
@@ -123,7 +123,7 @@ variable "disk_size_gb" {
 
 variable "disk_type" {
   type    = string
-  default = "pd-balanced"
+  default = ""
 }
 
 variable "preemptible" {
