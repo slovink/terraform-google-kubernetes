@@ -68,7 +68,7 @@ module "gke" {
   gke_version                        = "1.31.5-gke.1068000"
   initial_node_count                 = 1
   google_container_node_pool_enabled = true
-  node_count                         = 7
+  node_count                         = 4
   cluster_name                       = "test-gke"
   project_id                         = var.gcp_project_id
   region                             = var.gcp_region
