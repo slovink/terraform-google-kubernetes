@@ -42,7 +42,7 @@ variable "remove_default_node_pool" {
 
 variable "initial_node_count" {
   type        = number
-  default     = 4
+  default     = 1
   description = "The number of nodes to create in this cluster's default node pool."
 }
 
