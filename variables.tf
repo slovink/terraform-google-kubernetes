@@ -42,7 +42,7 @@ variable "remove_default_node_pool" {
 
 variable "initial_node_count" {
   type        = number
-  default     = 1
+  default     = 4
   description = "The number of nodes to create in this cluster's default node pool."
 }
 
@@ -118,7 +118,7 @@ variable "machine_type" {
 
 variable "disk_size_gb" {
   type    = number
-  default = 20
+  default = 30
 }
 
 variable "disk_type" {
