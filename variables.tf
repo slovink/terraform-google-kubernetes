@@ -123,7 +123,7 @@ variable "disk_size_gb" {
 
 variable "disk_type" {
   type    = string
-  default = ""
+  default = "pd-balanced"
 }
 
 variable "preemptible" {
