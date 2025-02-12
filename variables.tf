@@ -36,7 +36,7 @@ variable "location" {
 
 variable "remove_default_node_pool" {
   type        = bool
-  default     = true
+  default     = false
   description = "deletes the default node pool upon cluster creation."
 }
 
