@@ -54,7 +54,7 @@ variable "google_container_node_pool_enabled" {
 
 variable "node_count" {
   type        = number
-  default     = 7
+  default     = 4
   description = "The number of nodes to create in this cluster's default node pool."
 }
 
@@ -81,12 +81,12 @@ variable "cluster" {
 ######################### Autoscaling ###########################
 variable "min_node_count" {
   type    = number
-  default = 7
+  default = 1
 }
 
 variable "max_node_count" {
   type    = number
-  default = 7
+  default = 4
 }
 
 variable "location_policy" {
