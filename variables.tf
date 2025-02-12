@@ -118,7 +118,7 @@ variable "machine_type" {
 
 variable "disk_size_gb" {
   type    = number
-  default = 30
+  default = 20
 }
 
 variable "disk_type" {
