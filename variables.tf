@@ -44,6 +44,11 @@ variable "google_container_cluster_enabled" {
   description = "Flag to control the cluster_enabled creation."
 }
 
+variable "kubernetes_version" {
+  type        = string
+  description = "The Kubernetes version of the masters. If set to 'latest' it will pull latest available version in the selected region."
+  default     = "latest"
+}
 
 variable "regional" {
   type        = bool
