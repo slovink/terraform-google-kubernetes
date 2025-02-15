@@ -198,3 +198,34 @@ variable "gke_version" {
   description = "The minimum version of the master. "
 
 }
+
+/******************************************
+  Create Container Cluster node pool
+ *****************************************/
+
+ variable "image_type" {
+  type        = string
+  default     = "UBUNTU_CONTAINERD"
+  description = "image type "
+
+}
+
+variable "machine_type" {
+  type    = string
+  default = ""
+}
+
+variable "disk_size_gb" {
+  type    = number
+  default = 50
+}
+
+variable "disk_type" {
+  type    = string
+  default = ""
+}
+
+variable "preemptible" {
+  type    = bool
+  default = false
+}
