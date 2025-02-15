@@ -1,3 +1,7 @@
+/******************************************
+            Global Variables
+ *****************************************/
+
 variable "environment" {
   type        = string
   default     = ""
@@ -22,10 +26,41 @@ variable "module_enabled" {
   description = "Flag to control the service_account_enabled creation."
 }
 
+
+variable "project" {
+  type        = string
+  default     = ""
+  description = "The project ID to host the cluster in"
+
+}
+
+/******************************************
+  Create Container Cluster
+ *****************************************/
+
 variable "google_container_cluster_enabled" {
   type        = bool
   default     = true
   description = "Flag to control the cluster_enabled creation."
+}
+
+
+variable "regional" {
+  type        = bool
+  description = "Whether is a regional cluster (zonal cluster if set false. WARNING: changing this after cluster creation is destructive!)"
+  default     = true
+}
+
+variable "region" {
+  type        = string
+  description = "The region to host the cluster in (optional if zonal cluster / required if regional)"
+  default     = null
+}
+
+variable "zones" {
+  type        = list(string)
+  description = "The zones to host the cluster in (optional if regional cluster / required if zonal)"
+  default     = []
 }
 
 variable "location" {
@@ -64,27 +99,12 @@ variable "service_account" {
   description = "The Google Cloud Platform Service Account to be used by the node VMs created by GKE Autopilot or NAP."
 }
 
-variable "project" {
-  type        = string
-  default     = ""
-  description = "The project ID to host the cluster in"
-
-}
-
-variable "cluster" {
-  type        = string
-  default     = ""
-  description = "The cluster to create the node pool for."
-
-}
-
 
 variable "cluster_ipv4_cidr" {
   type        = string
   default     = null
   description = "The IP address range of the kubernetes pods in this cluster. Default is an automatically assigned CIDR."
 }
-
 
 variable "network_policy" {
   type        = bool
@@ -111,24 +131,6 @@ variable "release_channel" {
 }
 
 
-
-variable "regional" {
-  type        = bool
-  description = "Whether is a regional cluster (zonal cluster if set false. WARNING: changing this after cluster creation is destructive!)"
-  default     = true
-}
-
-variable "region" {
-  type        = string
-  description = "The region to host the cluster in (optional if zonal cluster / required if regional)"
-  default     = null
-}
-
-variable "zones" {
-  type        = list(string)
-  description = "The zones to host the cluster in (optional if regional cluster / required if zonal)"
-  default     = []
-}
 ######################### Autoscaling ###########################
 variable "min_node_count" {
   type    = number
