@@ -20,6 +20,6 @@ locals {
     master_version          = var.regional ? local.master_version_regional : local.master_version_zonal
     default_auto_upgrade = var.regional || var.release_channel != "UNSPECIFIED" ? true : false
     cluster_network_tag                        = "gke-${var.name}"
-    cluster_alias_ranges_cidr = var.add_cluster_firewall_rules ? { for range in toset(data.google_compute_subnetwork.gke_subnetwork[0].secondary_ip_range) : range.range_name => range.ip_cidr_range } : {}
+    # cluster_alias_ranges_cidr = var.add_cluster_firewall_rules ? { for range in toset(data.google_compute_subnetwork.gke_subnetwork[0].secondary_ip_range) : range.range_name => range.ip_cidr_range } : {}
     pod_all_ip_ranges         =  "var.cluster_ipv4_cidr"
 }
