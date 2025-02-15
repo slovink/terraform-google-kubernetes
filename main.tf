@@ -6,6 +6,10 @@ module "labels" {
   label_order = var.label_order
 }
 
+/******************************************
+  Create Container Cluster
+ *****************************************/
+
 resource "google_container_cluster" "primary" {
   count = var.google_container_cluster_enabled && var.module_enabled ? 1 : 0
 
@@ -16,7 +20,26 @@ resource "google_container_cluster" "primary" {
   subnetwork               = var.subnetwork
   remove_default_node_pool = var.remove_default_node_pool
   initial_node_count       = var.initial_node_count
-  min_master_version       = var.gke_version
+  cluster_ipv4_cidr   = var.cluster_ipv4_cidr
+  min_master_version = var.release_channel == null || var.release_channel == "UNSPECIFIED" ? local.master_version : var.kubernetes_version == "latest" ? null : var.kubernetes_version
+  deletion_protection = var.deletion_protection
+
+  dynamic "release_channel" {
+    for_each = local.release_channel
+
+    content {
+      channel = release_channel.value.channel
+    }
+  }
+
+  dynamic "network_policy" {
+    for_each = local.cluster_network_policy
+
+    content {
+      enabled  = network_policy.value.enabled
+      provider = network_policy.value.provider
+    }
+  }
 
   private_cluster_config {
       enable_private_nodes    = true
@@ -26,12 +49,18 @@ resource "google_container_cluster" "primary" {
   
 }
 
+/******************************************
+  Create Container Cluster node pools
+ *****************************************/
+
 resource "google_container_node_pool" "node_pool" {
   name               = format("%s", module.labels.id)
   project            = var.project_id
   location           = var.location
   cluster            = join("", google_container_cluster.primary[*].id)
   initial_node_count = var.initial_node_count
+  // use node_locations if provided, defaults to cluster level node_locations if not specified
+  node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", each.value["node_locations"]) : null
 
   autoscaling {
     min_node_count  = var.min_node_count
@@ -63,6 +92,7 @@ resource "google_container_node_pool" "node_pool" {
     ignore_changes = [initial_node_count]
     #    create_before_destroy = false
   }
+
   timeouts {
     create = var.cluster_create_timeouts
     update = var.cluster_update_timeouts

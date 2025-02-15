@@ -78,6 +78,57 @@ variable "cluster" {
 
 }
 
+
+variable "cluster_ipv4_cidr" {
+  type        = string
+  default     = null
+  description = "The IP address range of the kubernetes pods in this cluster. Default is an automatically assigned CIDR."
+}
+
+
+variable "network_policy" {
+  type        = bool
+  description = "Enable network policy addon"
+  default     = false
+}
+
+variable "network_policy_provider" {
+  type        = string
+  description = "The network policy provider."
+  default     = "CALICO"
+}
+
+variable "deletion_protection" {
+  type        = bool
+  description = "Whether or not to allow Terraform to destroy the cluster."
+  default     = false
+}
+
+variable "release_channel" {
+  type        = string
+  description = "The release channel of this cluster. Accepted values are `UNSPECIFIED`, `RAPID`, `REGULAR` and `STABLE`. Defaults to `REGULAR`."
+  default     = "REGULAR"
+}
+
+
+
+variable "regional" {
+  type        = bool
+  description = "Whether is a regional cluster (zonal cluster if set false. WARNING: changing this after cluster creation is destructive!)"
+  default     = true
+}
+
+variable "region" {
+  type        = string
+  description = "The region to host the cluster in (optional if zonal cluster / required if regional)"
+  default     = null
+}
+
+variable "zones" {
+  type        = list(string)
+  description = "The zones to host the cluster in (optional if regional cluster / required if zonal)"
+  default     = []
+}
 ######################### Autoscaling ###########################
 variable "min_node_count" {
   type    = number
