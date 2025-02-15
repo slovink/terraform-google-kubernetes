@@ -129,3 +129,15 @@ variable "release_channel" {
   description = "The release channel of this cluster. Accepted values are `UNSPECIFIED`, `RAPID`, `REGULAR` and `STABLE`. Defaults to `REGULAR`."
   default     = "REGULAR"
 }
+
+variable "enable_private_nodes" {
+  type        = bool
+  description = "Whether nodes have internal IP addresses only"
+  default     = true
+}
+
+variable "enable_private_endpoint" {
+  type        = bool
+  description = "Whether the master's internal IP address is used as the cluster endpoint"
+  default     = false
+}
