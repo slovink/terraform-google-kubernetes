@@ -255,3 +255,8 @@ variable "auto_upgrade" {
   default = true
 }
 
+variable "firewall_priority" {
+  type        = number
+  description = "Priority rule for firewall rules"
+  default     = 1000
+}
