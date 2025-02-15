@@ -58,8 +58,8 @@ resource "google_container_node_pool" "node_pool" {
   location           = var.location
   cluster            = join("", google_container_cluster.primary[*].id)
   initial_node_count = var.initial_node_count
-  // use node_locations if provided, defaults to cluster level node_locations if not specified
-  node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", each.value["node_locations"]) : null
+  # // use node_locations if provided, defaults to cluster level node_locations if not specified
+  # node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", each.value["node_locations"]) : null
 
   autoscaling {
     min_node_count  = var.min_node_count
