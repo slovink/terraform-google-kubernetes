@@ -18,4 +18,5 @@ locals {
     master_version_regional = var.kubernetes_version != "latest" ? var.kubernetes_version : data.google_container_engine_versions.region.latest_master_version
     master_version_zonal    = var.kubernetes_version != "latest" ? var.kubernetes_version : data.google_container_engine_versions.zone.latest_master_version
     master_version          = var.regional ? local.master_version_regional : local.master_version_zonal
+    default_auto_upgrade = var.regional || var.release_channel != "UNSPECIFIED" ? true : false
 }

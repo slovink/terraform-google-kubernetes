@@ -48,3 +48,50 @@ resource "google_container_cluster" "primary" {
   
 }
 
+/******************************************
+  Create Container Cluster node pools
+ *****************************************/
+
+resource "google_container_node_pool" "node_pool" {
+  name               = format("%s", module.labels.id)
+  project            = var.project_id
+  location           = var.location
+  cluster            = join("", google_container_cluster.primary[*].id)
+  initial_node_count = var.initial_node_count
+
+  autoscaling {
+    min_node_count  = var.min_node_count
+    max_node_count  = var.max_node_count
+    location_policy = var.location_policy
+  }
+
+  management {
+    auto_repair  = var.auto_repair
+    auto_upgrade = var.auto_upgrade
+  }
+
+  node_config {
+    image_type      = "COS_CONTAINERD"
+    machine_type    = var.machine_type
+    service_account = var.service_account
+    disk_size_gb    = var.disk_size_gb
+    disk_type       = var.disk_type
+    preemptible     = var.preemptible
+    kubelet_config {
+      cpu_manager_policy   = "static"
+      cpu_cfs_quota        = true
+      cpu_cfs_quota_period = "100us"
+      pod_pids_limit       = 1024
+}
+  }
+
+  lifecycle {
+    ignore_changes = [initial_node_count]
+    #    create_before_destroy = false
+  }
+  timeouts {
+    create = var.cluster_create_timeouts
+    update = var.cluster_update_timeouts
+    delete = var.cluster_delete_timeouts
+  }
+}
