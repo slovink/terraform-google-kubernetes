@@ -21,5 +21,5 @@ locals {
     default_auto_upgrade = var.regional || var.release_channel != "UNSPECIFIED" ? true : false
     cluster_network_tag                        = "gke-${var.name}"
     cluster_alias_ranges_cidr = var.add_cluster_firewall_rules ? { for range in toset(data.google_compute_subnetwork.gke_subnetwork[0].secondary_ip_range) : range.range_name => range.ip_cidr_range } : {}
-    pod_all_ip_ranges         = var.add_cluster_firewall_rules ? compact(concat([local.cluster_alias_ranges_cidr[var.cluster_ipv4_cidr]], [for range in var.additional_ip_range_pods : local.cluster_alias_ranges_cidr[range] if length(range) > 0], [for k, v in merge(local.node_pools, local.windows_node_pools) : local.cluster_alias_ranges_cidr[v.pod_range] if length(lookup(v, "pod_range", "")) > 0]))
+    pod_all_ip_ranges         =  "var.cluster_ipv4_cidr"
 }
