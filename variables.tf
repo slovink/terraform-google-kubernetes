@@ -51,11 +51,6 @@ variable "regional" {
   default     = true
 }
 
-variable "region" {
-  type        = string
-  description = "The region to host the cluster in (optional if zonal cluster / required if regional)"
-  default     = null
-}
 
 variable "zones" {
   type        = list(string)
