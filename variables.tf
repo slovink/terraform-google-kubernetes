@@ -100,10 +100,22 @@ variable "service_account" {
 }
 
 
+variable "master_ipv4_cidr_block" {
+  type        = string
+  default     = "10.240.0.0/14"
+  description = "The IP address range of the kubernetes pods in this cluster. Default is an automatically assigned CIDR."
+}
+
 variable "cluster_ipv4_cidr" {
   type        = string
   default     = "10.240.0.0/14"
   description = "The IP address range of the kubernetes pods in this cluster. Default is an automatically assigned CIDR."
+}
+
+variable "subnetwork" {
+  type        = string
+  description = "The subnetwork to host the cluster in (required)"
+  default = "kubernetes-subnet"
 }
 
 variable "additional_ip_range_pods" {

@@ -14,3 +14,4 @@ data "google_container_engine_versions" "zone" {
   location = local.zone_count == 0 ? data.google_compute_zones.available[0].names[0] : var.zones[0]
   project  = var.project_id
 }
+
