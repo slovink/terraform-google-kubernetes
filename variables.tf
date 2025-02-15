@@ -141,3 +141,60 @@ variable "enable_private_endpoint" {
   description = "Whether the master's internal IP address is used as the cluster endpoint"
   default     = false
 }
+
+variable "cluster_create_timeouts" {
+  type    = string
+  default = "30m"
+}
+
+variable "cluster_update_timeouts" {
+  type    = string
+  default = "30m"
+}
+
+variable "cluster_delete_timeouts" {
+  type    = string
+  default = "30m"
+}
+
+variable "kubectl_config_path" {
+  description = "Path to the kubectl config file. Defaults to $HOME/.kube/config"
+  type        = string
+  default     = ""
+}
+
+variable "cluster_name" {
+  type    = string
+  default = ""
+}
+
+variable "project_id" {
+  type        = string
+  default     = ""
+  description = "Google Cloud project ID"
+}
+
+variable "region" {
+  type        = string
+  default     = ""
+  description = "Google Cloud region"
+}
+variable "network" {
+  type        = string
+  default     = ""
+  description = "A reference (self link) to the VPC network to host the cluster in"
+
+}
+
+variable "subnetwork" {
+  type        = string
+  default     = ""
+  description = "A reference (self link) to the subnetwork to host the cluster in"
+
+}
+variable "gke_version" {
+  type        = string
+  default     = ""
+  description = "The minimum version of the master. "
+
+}
