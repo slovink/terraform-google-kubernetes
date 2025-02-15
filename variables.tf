@@ -244,3 +244,14 @@ variable "location_policy" {
   type    = string
   default = "BALANCED"
 }
+
+variable "auto_repair" {
+  type    = bool
+  default = true
+}
+
+variable "auto_upgrade" {
+  type    = bool
+  default = true
+}
+
