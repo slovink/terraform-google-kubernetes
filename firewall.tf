@@ -15,11 +15,6 @@ resource "google_compute_firewall" "intra_egress" {
   direction   = "EGRESS"
 
   target_tags = [local.cluster_network_tag]
-  destination_ranges = concat([
-    local.cluster_subnet_cidr,
-    ],
-    local.pod_all_ip_ranges
-  )
 
   # Allow all possible protocols
   allow { protocol = "tcp" }

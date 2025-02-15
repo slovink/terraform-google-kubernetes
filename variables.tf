@@ -260,3 +260,9 @@ variable "firewall_priority" {
   description = "Priority rule for firewall rules"
   default     = 1000
 }
+
+variable "add_cluster_firewall_rules" {
+  type        = bool
+  description = "Create additional firewall rules"
+  default     = true
+}
