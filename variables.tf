@@ -102,7 +102,7 @@ variable "service_account" {
 
 variable "cluster_ipv4_cidr" {
   type        = string
-  default     = null
+  default     = "10.240.0.0/14"
   description = "The IP address range of the kubernetes pods in this cluster. Default is an automatically assigned CIDR."
 }
 
