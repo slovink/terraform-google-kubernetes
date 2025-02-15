@@ -22,7 +22,6 @@ resource "google_container_cluster" "primary" {
   initial_node_count       = var.initial_node_count
   cluster_ipv4_cidr   = var.cluster_ipv4_cidr
   min_master_version = var.release_channel == null || var.release_channel == "UNSPECIFIED" ? local.master_version : var.kubernetes_version == "latest" ? null : var.kubernetes_version
-  deletion_protection = var.deletion_protection
 
   dynamic "release_channel" {
     for_each = local.release_channel
