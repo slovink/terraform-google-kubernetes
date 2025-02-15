@@ -229,3 +229,18 @@ variable "preemptible" {
   type    = bool
   default = false
 }
+
+variable "min_node_count" {
+  type    = number
+  default = 2
+}
+
+variable "max_node_count" {
+  type    = number
+  default = 7
+}
+
+variable "location_policy" {
+  type    = string
+  default = "BALANCED"
+}
