@@ -112,7 +112,7 @@ variable "cluster_ipv4_cidr" {
   description = "The IP address range of the kubernetes pods in this cluster. Default is an automatically assigned CIDR."
 }
 
-variable "subnetwork" {
+variable "subnetworkName" {
   type        = string
   description = "The subnetwork to host the cluster in (required)"
   default = "kubernetes-subnet"
