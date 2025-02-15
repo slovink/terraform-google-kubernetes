@@ -13,4 +13,8 @@ locals {
 
     release_channel    = var.release_channel != null ? [{ channel : var.release_channel }] : []
     node_locations = var.regional ? coalescelist(compact(var.zones), try(sort(random_shuffle.available_zones[0].result), [])) : slice(var.zones, 1, length(var.zones))
+    // Kubernetes version
+    master_version_regional = var.kubernetes_version != "latest" ? var.kubernetes_version : data.google_container_engine_versions.region.latest_master_version
+    master_version_zonal    = var.kubernetes_version != "latest" ? var.kubernetes_version : data.google_container_engine_versions.zone.latest_master_version
+    master_version          = var.regional ? local.master_version_regional : local.master_version_zonal
 }

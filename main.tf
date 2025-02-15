@@ -15,7 +15,7 @@ resource "google_container_cluster" "primary" {
 
   name     = module.labels.id
   location = var.location
-
+  project            = var.project_id
   network                  = var.network
   subnetwork               = var.subnetwork
   remove_default_node_pool = var.remove_default_node_pool
