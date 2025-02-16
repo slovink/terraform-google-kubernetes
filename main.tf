@@ -169,10 +169,11 @@ resource "google_container_node_pool" "node_pool" {
 
   }
 
-  lifecycle {
-    ignore_changes = [node_config[0].resource_labels["goog-gke-node-pool-provisioning-model"]
-
-  }
+lifecycle {
+  ignore_changes = [
+    node_config[0].resource_labels["goog-gke-node-pool-provisioning-model"]
+  ]
+}
   timeouts {
     create = lookup(var.timeouts, "create", "45m")
     update = lookup(var.timeouts, "update", "45m")
