@@ -18,7 +18,7 @@ resource "google_compute_firewall" "intra_egress" {
     "${local.cluster_endpoint_for_nodes}",
     "${local.cluster_subnet_cidr}",
     "${local.pod_all_ip_ranges}"]
-  )
+
 
 
   # Allow all possible protocols
