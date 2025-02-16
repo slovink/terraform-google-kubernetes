@@ -87,7 +87,7 @@ resource "google_container_node_pool" "node_pool" {
   }
 
   lifecycle {
-    ignore_changes = [initial_node_count]
+    ignore_changes = [node_count]
     #    create_before_destroy = false
   }
   timeouts {
