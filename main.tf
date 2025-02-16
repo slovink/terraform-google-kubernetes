@@ -75,7 +75,7 @@ resource "google_container_node_pool" "node_pool" {
     lookup(each.value, "min_count", 1)
   ) : null
 
-  max_pods_per_node = lookup(each.value, "max_pods_per_node", null)
+
   node_count = lookup(each.value, "autoscaling", true) ? null : lookup(each.value, "node_count", 1)
 
   dynamic "autoscaling" {
