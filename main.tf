@@ -62,7 +62,7 @@ resource "google_container_node_pool" "node_pool" {
   project            = var.project_id
   location           = var.location
   cluster            = join("", google_container_cluster.primary[*].id)
-  cluster_type
+  cluster_type       = local.cluster_type
 
   version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade) ? "" : lookup(
   each.value,
