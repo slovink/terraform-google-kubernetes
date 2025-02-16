@@ -64,11 +64,11 @@ resource "google_container_node_pool" "node_pool" {
   cluster            = join("", google_container_cluster.primary[*].id)
   node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", each.value["node_locations"]) : null
 
-  version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade) ? "" : lookup(
-  each.value,
-  "version",
-  google_container_cluster.primary[0].min_master_version,
-  )
+  # version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade) ? "" : lookup(
+  # each.value,
+  # "version",
+  # google_container_cluster.primary[0].min_master_version,
+  # )
 
   initial_node_count = lookup(each.value, "autoscaling", true) ? lookup(
     each.value,
@@ -131,19 +131,25 @@ resource "google_container_node_pool" "node_pool" {
     service_account = var.service_account
     preemptible = lookup(each.value, "preemptible", false)
     spot        = lookup(each.value, "spot", false)
+    tags = concat(
+      lookup(local.node_pools_tags, "default_values", [true, true])[0] ? [local.cluster_network_tag] : [],
+      lookup(local.node_pools_tags, "default_values", [true, true])[1] ? ["${local.cluster_network_tag}-${each.value["name"]}"] : [],
+      local.node_pools_tags["all"],
+      local.node_pools_tags[each.value["name"]],
+    )
 
-    # dynamic "kubelet_config" {
-    #   for_each = length(setintersection(
-    #     keys(each.value),
-    #     ["cpu_manager_policy", "cpu_cfs_quota", "cpu_cfs_quota_period", "pod_pids_limit"]
-    #   )) != 0 ? [1] : []
-    #   content {
-    #     cpu_manager_policy                     = lookup(each.value, "cpu_manager_policy", "static")
-    #     cpu_cfs_quota                          = lookup(each.value, "cpu_cfs_quota", null)
-    #     cpu_cfs_quota_period                   = lookup(each.value, "cpu_cfs_quota_period", null)
-    #     pod_pids_limit                         = lookup(each.value, "pod_pids_limit", null)
-    #   }
-    # }
+    dynamic "kubelet_config" {
+      for_each = length(setintersection(
+        keys(each.value),
+        ["cpu_manager_policy", "cpu_cfs_quota", "cpu_cfs_quota_period", "pod_pids_limit"]
+      )) != 0 ? [1] : []
+      content {
+        cpu_manager_policy                     = lookup(each.value, "cpu_manager_policy", "static")
+        cpu_cfs_quota                          = lookup(each.value, "cpu_cfs_quota", null)
+        cpu_cfs_quota_period                   = lookup(each.value, "cpu_cfs_quota_period", null)
+        pod_pids_limit                         = lookup(each.value, "pod_pids_limit", null)
+      }
+    }
     dynamic "workload_metadata_config" {
         for_each = local.cluster_node_metadata_config
 
