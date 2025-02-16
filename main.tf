@@ -127,7 +127,7 @@ resource "google_container_node_pool" "node_pool" {
     dynamic "kubelet_config" {
       for_each = length(setintersection(
         keys(each.value),
-        ["cpu_manager_policy", "cpu_cfs_quota", "cpu_cfs_quota_period", "insecure_kubelet_readonly_port_enabled", "pod_pids_limit"]
+        ["cpu_manager_policy", "cpu_cfs_quota", "cpu_cfs_quota_period", "pod_pids_limit"]
       )) != 0 ? [1] : []
 
       content {
