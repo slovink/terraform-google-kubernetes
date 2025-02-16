@@ -90,6 +90,13 @@ resource "google_container_node_pool" "node_pool" {
     }
   }
 
+  dynamic "placement_policy" {
+    for_each = length(lookup(each.value, "placement_policy", "")) > 0 ? [each.value] : []
+    content {
+      type = lookup(placement_policy.value, "placement_policy", null)
+    }
+  }
+
   dynamic "network_config" {
     for_each = length(lookup(each.value, "pod_range", "")) > 0 ? [each.value] : []
     content {
@@ -131,6 +138,9 @@ resource "google_container_node_pool" "node_pool" {
     service_account = var.service_account
     preemptible = lookup(each.value, "preemptible", false)
     spot        = lookup(each.value, "spot", false)
+    linux_node_config {
+      sysctls = {}
+    }
     labels = {
       environment = "prod"
     }
