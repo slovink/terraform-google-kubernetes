@@ -90,6 +90,14 @@ resource "google_container_node_pool" "node_pool" {
     }
   }
 
+  dynamic "network_config" {
+    for_each = length(lookup(each.value, "pod_range", "")) > 0 ? [each.value] : []
+    content {
+      pod_range            = lookup(network_config.value, "pod_range", null)
+      enable_private_nodes = var.enable_private_nodes
+    }
+  }
+
   management {
     auto_repair  = lookup(each.value, "auto_repair", true)
     auto_upgrade = lookup(each.value, "auto_upgrade", local.default_auto_upgrade)
@@ -136,6 +144,14 @@ resource "google_container_node_pool" "node_pool" {
         pod_pids_limit                         = lookup(each.value, "pod_pids_limit", null)
       }
     }
+    dynamic "workload_metadata_config" {
+        for_each = local.cluster_node_metadata_config
+
+        content {
+          mode = workload_metadata_config.value.mode
+        }
+      }
+
   }
 
   lifecycle {
