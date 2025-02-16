@@ -58,6 +58,7 @@ resource "google_container_node_pool" "node_pool" {
   location           = var.location
   cluster            = join("", google_container_cluster.primary[*].id)
   initial_node_count = var.initial_node_count
+  node_count         =  2
 
   autoscaling {
     min_node_count  = var.min_node_count
@@ -65,10 +66,10 @@ resource "google_container_node_pool" "node_pool" {
     location_policy = var.location_policy
   }
 
-  management {
-    auto_repair  = var.auto_repair
-    auto_upgrade = var.auto_upgrade
-  }
+  # management {
+  #   auto_repair  = var.auto_repair
+  #   auto_upgrade = var.auto_upgrade
+  # }
 
   node_config {
     image_type      = "COS_CONTAINERD"
