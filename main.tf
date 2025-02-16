@@ -121,7 +121,6 @@ resource "google_container_node_pool" "node_pool" {
     disk_size_gb    = lookup(each.value, "disk_size_gb", 30)
     disk_type       = lookup(each.value, "disk_type", "pd-standard")
     service_account = var.service_account
-
     preemptible = lookup(each.value, "preemptible", false)
     spot        = lookup(each.value, "spot", false)
 
