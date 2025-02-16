@@ -171,6 +171,7 @@ resource "google_container_node_pool" "node_pool" {
 
 lifecycle {
   ignore_changes = [
+    initial_node_count,
     node_config[0].resource_labels["goog-gke-node-pool-provisioning-model"]
   ]
 }
