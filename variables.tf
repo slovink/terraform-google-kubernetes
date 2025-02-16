@@ -53,7 +53,7 @@ variable "kubernetes_version" {
 variable "regional" {
   type        = bool
   description = "Whether is a regional cluster (zonal cluster if set false. WARNING: changing this after cluster creation is destructive!)"
-  default     = true
+  default     = false
 }
 
 

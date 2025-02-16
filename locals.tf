@@ -1,9 +1,25 @@
-locals {
+/******************************************
+  Get available zones in region
+ *****************************************/
+data "google_compute_zones" "available" {
+  count = local.zone_count == 0 ? 1 : 0
+  project = var.project_id
+  region  = var.region
+}
 
+resource "random_shuffle" "available_zones" {
+  count = local.zone_count == 0 ? 1 : 0
+
+  input        = data.google_compute_zones.available[0].names
+  result_count = 3
+}
+
+locals {
 
     location = var.regional ? var.region : var.zones[0]
     region   = var.regional ? var.region : join("-", slice(split("-", var.zones[0]), 0, 2))
     zone_count                  = length(var.zones)
+    cluster_type                = var.regional ? "regional" : "zonal"
     cluster_network_policy = var.network_policy ? [{
     enabled  = true
     provider = var.network_policy_provider
@@ -22,5 +38,7 @@ locals {
     pod_all_ip_ranges         =  var.cluster_ipv4_cidr
     cluster_subnet_cidr = var.add_cluster_firewall_rules ? data.google_compute_subnetwork.gke_subnetwork[0].ip_cidr_range : null
     cluster_endpoint_for_nodes = var.master_ipv4_cidr_block
+    node_locations = var.regional ? coalescelist(compact(var.zones), try(sort(random_shuffle.available_zones[0].result), [])) : slice(var.zones, 1, length(var.zones))
+    default_auto_upgrade = var.regional || var.release_channel != "UNSPECIFIED" ? true : false
   
 }
