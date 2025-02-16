@@ -131,12 +131,7 @@ resource "google_container_node_pool" "node_pool" {
     service_account = var.service_account
     preemptible = lookup(each.value, "preemptible", false)
     spot        = lookup(each.value, "spot", false)
-    tags = concat(
-      lookup(local.node_pools_tags, "default_values", [true, true])[0] ? [local.cluster_network_tag] : [],
-      lookup(local.node_pools_tags, "default_values", [true, true])[1] ? ["${local.cluster_network_tag}-${each.value["name"]}"] : [],
-      local.node_pools_tags["all"],
-      local.node_pools_tags[each.value["name"]],
-    )
+
 
     dynamic "kubelet_config" {
       for_each = length(setintersection(
