@@ -62,7 +62,11 @@ variable "network_policy" {
   default     = false
 }
 
-
+variable "network_policy_provider" {
+  type        = string
+  description = "The network policy provider."
+  default     = "CALICO"
+}
 variable "zones" {
   type        = list(string)
   description = "The zones to host the cluster in (optional if regional cluster / required if zonal)"
