@@ -21,6 +21,6 @@ locals {
     default_auto_upgrade = var.regional || var.release_channel != "UNSPECIFIED" ? true : false
     pod_all_ip_ranges         =  "var.cluster_ipv4_cidr"
     cluster_subnet_cidr = var.add_cluster_firewall_rules ? data.google_compute_subnetwork.gke_subnetwork[0].ip_cidr_range : null
-    cluster_endpoint_for_nodes = google_container_cluster.primary.private_cluster_config.master_ipv4_cidr_block
+    cluster_endpoint_for_nodes = google_container_cluster.primary.private_cluster_config[0].master_ipv4_cidr_block
   
 }
