@@ -62,13 +62,13 @@ resource "google_container_node_pool" "node_pool" {
   project            = var.project_id
   location           = var.location
   cluster            = join("", google_container_cluster.primary[*].id)
-  # node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", each.value["node_locations"]) : null
+  node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", each.value["node_locations"]) : null
 
-  # version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade) ? "" : lookup(
-  # each.value,
-  # "version",
-  # google_container_cluster.primary[0].min_master_version,
-  # )
+  version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade) ? "" : lookup(
+  each.value,
+  "version",
+  google_container_cluster.primary[0].min_master_version,
+  )
 
   initial_node_count = lookup(each.value, "autoscaling", true) ? lookup(
     each.value,
@@ -131,6 +131,10 @@ resource "google_container_node_pool" "node_pool" {
     service_account = var.service_account
     preemptible = lookup(each.value, "preemptible", false)
     spot        = lookup(each.value, "spot", false)
+    labels = {
+      environment = "prod"
+    }
+     tags = ["kubernetes"]
 
 
     dynamic "kubelet_config" {
