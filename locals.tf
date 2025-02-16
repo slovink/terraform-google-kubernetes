@@ -25,5 +25,5 @@ locals {
     cluster_subnet_cidr = var.add_cluster_firewall_rules ? data.google_compute_subnetwork.gke_subnetwork[0].ip_cidr_range : null
     cluster_endpoint_for_nodes = var.master_ipv4_cidr_block
     node_locations = var.regional ? coalescelist(compact(var.zones), try(sort(random_shuffle.available_zones[0].result), [])) : slice(var.zones, 1, length(var.zones))
-  
+    node_pools         = { for np in var.node_pools : np.name => np } 
 }
