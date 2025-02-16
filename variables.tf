@@ -204,6 +204,17 @@ variable "gke_version" {
   Create Container Cluster node pool
  *****************************************/
 
+variable "node_pools" {
+  type        = list(map(any))
+  description = "List of maps containing node pools"
+
+  default = [
+    {
+      name = "default-node-pool"
+    },
+  ]
+}
+
  variable "image_type" {
   type        = string
   default     = "UBUNTU_CONTAINERD"
