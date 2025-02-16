@@ -57,8 +57,8 @@ resource "google_container_node_pool" "node_pool" {
   depends_on = [
     google_compute_firewall.intra_egress,
   ]
-  for_each = local.node_pools
-  name               = format("%s", module.labels.id)
+  for_each           = local.node_pools
+  name               = each.key
   project            = var.project_id
   location           = var.location
   cluster            = join("", google_container_cluster.primary[*].id)
