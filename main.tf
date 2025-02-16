@@ -159,13 +159,6 @@ resource "google_container_node_pool" "node_pool" {
         pod_pids_limit                         = lookup(each.value, "pod_pids_limit", null)
       }
     }
-    dynamic "workload_metadata_config" {
-        for_each = local.cluster_node_metadata_config
-
-        content {
-          mode = workload_metadata_config.value.mode
-        }
-      }
 
   }
 
