@@ -70,7 +70,7 @@ variable "network_policy_provider" {
 variable "zones" {
   type        = list(string)
   description = "The zones to host the cluster in (optional if regional cluster / required if zonal)"
-  default     = []
+  default     = ["us-east-1b"]
 }
 
 variable "location" {
