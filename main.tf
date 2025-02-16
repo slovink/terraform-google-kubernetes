@@ -57,7 +57,7 @@ resource "google_container_node_pool" "node_pool" {
   project            = var.project_id
   location           = var.location
   cluster            = join("", google_container_cluster.primary[*].id)
-  initial_node_count = var.initial_node_count
+  # initial_node_count = var.initial_node_count
   node_count         =  2
 
   autoscaling {
