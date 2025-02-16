@@ -142,17 +142,6 @@ resource "google_container_node_pool" "node_pool" {
         pod_pids_limit                         = lookup(each.value, "pod_pids_limit", null)
       }
     }
-    dynamic "taint" {
-      for_each = concat(
-        local.node_pools_taints["all"],
-        local.node_pools_taints[each.value["name"]],
-      )
-      content {
-        effect = taint.value.effect
-        key    = taint.value.key
-        value  = taint.value.value
-      }
-    }
   }
 
   lifecycle {
