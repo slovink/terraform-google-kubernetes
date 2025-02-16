@@ -7,7 +7,6 @@ locals {
     location = var.regional ? var.region : var.zones[0]
     region   = var.regional ? var.region : join("-", slice(split("-", var.zones[0]), 0, 2))
     zone_count                  = length(var.zones)
-    cluster_type                = var.regional ? "regional" : "zonal"
     cluster_network_policy = var.network_policy ? [{
     enabled  = true
     provider = var.network_policy_provider
