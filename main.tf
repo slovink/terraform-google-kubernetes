@@ -60,11 +60,11 @@ resource "google_container_node_pool" "node_pool" {
   # initial_node_count = var.initial_node_count
   node_count         =  2
 
-  autoscaling {
-    min_node_count  = var.min_node_count
-    max_node_count  = var.max_node_count
-    location_policy = var.location_policy
-  }
+  # autoscaling {
+  #   min_node_count  = var.min_node_count
+  #   max_node_count  = var.max_node_count
+  #   location_policy = var.location_policy
+  # }
 
   # management {
   #   auto_repair  = var.auto_repair
@@ -72,24 +72,24 @@ resource "google_container_node_pool" "node_pool" {
   # }
 
   node_config {
-    image_type      = "COS_CONTAINERD"
+    # image_type      = "COS_CONTAINERD"
     machine_type    = var.machine_type
     service_account = var.service_account
     disk_size_gb    = var.disk_size_gb
     disk_type       = var.disk_type
     preemptible     = var.preemptible
-    kubelet_config {
-      cpu_manager_policy   = "static"
-      cpu_cfs_quota        = true
-      cpu_cfs_quota_period = "100us"
-      pod_pids_limit       = 1024
-}
+#     kubelet_config {
+#       cpu_manager_policy   = "static"
+#       cpu_cfs_quota        = true
+#       cpu_cfs_quota_period = "100us"
+#       pod_pids_limit       = 1024
+# }
   }
 
-  lifecycle {
-    ignore_changes = [node_count]
-    #    create_before_destroy = false
-  }
+  # lifecycle {
+  #   ignore_changes = [node_count]
+  #   #    create_before_destroy = false
+  # }
   timeouts {
     create = var.cluster_create_timeouts
     update = var.cluster_update_timeouts
