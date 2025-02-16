@@ -34,6 +34,12 @@ variable "project" {
 
 }
 
+variable "project_id" {
+  type        = string
+  default     = ""
+  description = "Google Cloud project ID"
+}
+
 /******************************************
   Create Container Cluster
  *****************************************/
@@ -42,6 +48,31 @@ variable "google_container_cluster_enabled" {
   type        = bool
   default     = true
   description = "Flag to control the cluster_enabled creation."
+}
+
+variable "region" {
+  type        = string
+  default     = ""
+  description = "Google Cloud region"
+}
+variable "network" {
+  type        = string
+  default     = ""
+  description = "A reference (self link) to the VPC network to host the cluster in"
+
+}
+
+variable "subnetwork" {
+  type        = string
+  default     = ""
+  description = "A reference (self link) to the subnetwork to host the cluster in"
+
+}
+
+variable "subnetworkName" {
+  type        = string
+  description = "The subnetwork to host the cluster in (required)"
+  default = "kubernetes-subnet"
 }
 
 variable "kubernetes_version" {
@@ -122,13 +153,6 @@ variable "cluster_ipv4_cidr" {
   description = "The IP address range of the kubernetes pods in this cluster. Default is an automatically assigned CIDR."
 }
 
-
-variable "subnetworkName" {
-  type        = string
-  description = "The subnetwork to host the cluster in (required)"
-  default = "kubernetes-subnet"
-}
-
 variable "additional_ip_range_pods" {
   type        = list(string)
   description = "List of _names_ of the additional secondary subnet ip ranges to use for pods"
@@ -184,41 +208,18 @@ variable "kubectl_config_path" {
   default     = ""
 }
 
-variable "cluster_name" {
-  type    = string
-  default = ""
+variable "firewall_priority" {
+  type        = number
+  description = "Priority rule for firewall rules"
+  default     = 1000
 }
 
-variable "project_id" {
-  type        = string
-  default     = ""
-  description = "Google Cloud project ID"
+variable "add_cluster_firewall_rules" {
+  type        = bool
+  description = "Create additional firewall rules"
+  default     = true
 }
 
-variable "region" {
-  type        = string
-  default     = ""
-  description = "Google Cloud region"
-}
-variable "network" {
-  type        = string
-  default     = ""
-  description = "A reference (self link) to the VPC network to host the cluster in"
-
-}
-
-variable "subnetwork" {
-  type        = string
-  default     = ""
-  description = "A reference (self link) to the subnetwork to host the cluster in"
-
-}
-variable "gke_version" {
-  type        = string
-  default     = ""
-  description = "The minimum version of the master. "
-
-}
 
 /******************************************
   Create Container Cluster node pool
@@ -235,66 +236,4 @@ variable "node_pools" {
   ]
 }
 
- variable "image_type" {
-  type        = string
-  default     = "UBUNTU_CONTAINERD"
-  description = "image type "
 
-}
-
-variable "machine_type" {
-  type    = string
-  default = ""
-}
-
-variable "disk_size_gb" {
-  type    = number
-  default = 50
-}
-
-variable "disk_type" {
-  type    = string
-  default = ""
-}
-
-variable "preemptible" {
-  type    = bool
-  default = false
-}
-
-variable "min_node_count" {
-  type    = number
-  default = 2
-}
-
-variable "max_node_count" {
-  type    = number
-  default = 7
-}
-
-variable "location_policy" {
-  type    = string
-  default = "BALANCED"
-}
-
-variable "auto_repair" {
-  type    = bool
-  default = true
-}
-
-variable "auto_upgrade" {
-  type    = bool
-  default = true
-}
-
-variable "firewall_priority" {
-  type        = number
-  description = "Priority rule for firewall rules"
-  default     = 1000
-}
-
-variable "add_cluster_firewall_rules" {
-  type        = bool
-  description = "Create additional firewall rules"
-  default     = true
-}
