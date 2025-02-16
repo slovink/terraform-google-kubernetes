@@ -132,18 +132,18 @@ resource "google_container_node_pool" "node_pool" {
     preemptible = lookup(each.value, "preemptible", false)
     spot        = lookup(each.value, "spot", false)
 
-    dynamic "kubelet_config" {
-      for_each = length(setintersection(
-        keys(each.value),
-        ["cpu_manager_policy", "cpu_cfs_quota", "cpu_cfs_quota_period", "pod_pids_limit"]
-      )) != 0 ? [1] : []
-      content {
-        cpu_manager_policy                     = lookup(each.value, "cpu_manager_policy", "static")
-        cpu_cfs_quota                          = lookup(each.value, "cpu_cfs_quota", null)
-        cpu_cfs_quota_period                   = lookup(each.value, "cpu_cfs_quota_period", null)
-        pod_pids_limit                         = lookup(each.value, "pod_pids_limit", null)
-      }
-    }
+    # dynamic "kubelet_config" {
+    #   for_each = length(setintersection(
+    #     keys(each.value),
+    #     ["cpu_manager_policy", "cpu_cfs_quota", "cpu_cfs_quota_period", "pod_pids_limit"]
+    #   )) != 0 ? [1] : []
+    #   content {
+    #     cpu_manager_policy                     = lookup(each.value, "cpu_manager_policy", "static")
+    #     cpu_cfs_quota                          = lookup(each.value, "cpu_cfs_quota", null)
+    #     cpu_cfs_quota_period                   = lookup(each.value, "cpu_cfs_quota_period", null)
+    #     pod_pids_limit                         = lookup(each.value, "pod_pids_limit", null)
+    #   }
+    # }
     dynamic "workload_metadata_config" {
         for_each = local.cluster_node_metadata_config
 
@@ -155,7 +155,7 @@ resource "google_container_node_pool" "node_pool" {
   }
 
   lifecycle {
-    ignore_changes = [initial_node_count]
+    ignore_changes = [initial_node_count,node_version]
 
   }
   timeouts {
