@@ -17,7 +17,6 @@ locals {
   }]
 
     release_channel    = var.release_channel != null ? [{ channel : var.release_channel }] : []
-    node_locations = var.regional ? coalescelist(compact(var.zones), try(sort(random_shuffle.available_zones[0].result), [])) : slice(var.zones, 1, length(var.zones))
     // Kubernetes version
     master_version_regional = var.kubernetes_version != "latest" ? var.kubernetes_version : data.google_container_engine_versions.region.latest_master_version
     master_version_zonal    = var.kubernetes_version != "latest" ? var.kubernetes_version : data.google_container_engine_versions.zone.latest_master_version
@@ -27,6 +26,5 @@ locals {
     cluster_subnet_cidr = var.add_cluster_firewall_rules ? data.google_compute_subnetwork.gke_subnetwork[0].ip_cidr_range : null
     cluster_endpoint_for_nodes = var.master_ipv4_cidr_block
     node_locations = var.regional ? coalescelist(compact(var.zones), try(sort(random_shuffle.available_zones[0].result), [])) : slice(var.zones, 1, length(var.zones))
-    default_auto_upgrade = var.regional || var.release_channel != "UNSPECIFIED" ? true : false
   
 }
