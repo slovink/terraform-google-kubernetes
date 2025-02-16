@@ -56,6 +56,12 @@ variable "regional" {
   default     = false
 }
 
+variable "network_policy" {
+  type        = bool
+  description = "Enable network policy addon"
+  default     = false
+}
+
 
 variable "zones" {
   type        = list(string)
