@@ -125,24 +125,6 @@ variable "additional_ip_range_pods" {
   default     = []
 }
 
-variable "network_policy" {
-  type        = bool
-  description = "Enable network policy addon"
-  default     = false
-}
-
-variable "network_policy_provider" {
-  type        = string
-  description = "The network policy provider."
-  default     = "CALICO"
-}
-
-variable "deletion_protection" {
-  type        = bool
-  description = "Whether or not to allow Terraform to destroy the cluster."
-  default     = false
-}
-
 variable "release_channel" {
   type        = string
   description = "The release channel of this cluster. Accepted values are `UNSPECIFIED`, `RAPID`, `REGULAR` and `STABLE`. Defaults to `REGULAR`."
@@ -163,17 +145,17 @@ variable "enable_private_endpoint" {
 
 variable "cluster_create_timeouts" {
   type    = string
-  default = "30m"
+  default = "40m"
 }
 
 variable "cluster_update_timeouts" {
   type    = string
-  default = "30m"
+  default = "40m"
 }
 
 variable "cluster_delete_timeouts" {
   type    = string
-  default = "30m"
+  default = "40m"
 }
 
 variable "kubectl_config_path" {
