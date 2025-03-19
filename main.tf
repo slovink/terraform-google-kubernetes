@@ -1,5 +1,5 @@
 module "labels" {
-  source  = "git::https://github.com/slovink/terraform-google-labels.git"
+  source = "git::https://github.com/slovink/terraform-google-labels.git"
 
   name        = var.name
   environment = var.environment
@@ -14,15 +14,15 @@ module "labels" {
 resource "google_container_cluster" "primary" {
   count = var.google_container_cluster_enabled && var.module_enabled ? 1 : 0
 
-  name     = module.labels.id
-  location = var.location
-  project            = var.project_id
+  name                     = module.labels.id
+  location                 = var.location
+  project                  = var.project_id
   network                  = var.network
   subnetwork               = var.subnetwork
   remove_default_node_pool = var.remove_default_node_pool
   initial_node_count       = "1"
-  cluster_ipv4_cidr   = var.cluster_ipv4_cidr
-  min_master_version = var.release_channel == null || var.release_channel == "UNSPECIFIED" ? local.master_version : var.kubernetes_version == "latest" ? null : var.kubernetes_version
+  cluster_ipv4_cidr        = var.cluster_ipv4_cidr
+  min_master_version       = var.release_channel == null || var.release_channel == "UNSPECIFIED" ? local.master_version : var.kubernetes_version == "latest" ? null : var.kubernetes_version
 
   dynamic "release_channel" {
     for_each = local.release_channel
@@ -42,11 +42,11 @@ resource "google_container_cluster" "primary" {
   }
 
   private_cluster_config {
-      enable_private_nodes    = true
-      enable_private_endpoint = false  # Master remains public
-      master_ipv4_cidr_block  = var.master_ipv4_cidr_block
+    enable_private_nodes    = true
+    enable_private_endpoint = false # Master remains public
+    master_ipv4_cidr_block  = var.master_ipv4_cidr_block
   }
-  
+
 }
 
 /******************************************
@@ -57,17 +57,17 @@ resource "google_container_node_pool" "node_pool" {
   depends_on = [
     google_compute_firewall.intra_egress,
   ]
-  for_each           = local.node_pools
-  name               = each.key
-  project            = var.project_id
-  location           = var.location
-  cluster            = join("", google_container_cluster.primary[*].id)
+  for_each       = local.node_pools
+  name           = each.key
+  project        = var.project_id
+  location       = var.location
+  cluster        = join("", google_container_cluster.primary[*].id)
   node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", each.value["node_locations"]) : null
 
   version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade) ? "" : lookup(
-  each.value,
-  "version",
-  google_container_cluster.primary[0].min_master_version,
+    each.value,
+    "version",
+    google_container_cluster.primary[0].min_master_version,
   )
 
   initial_node_count = lookup(each.value, "autoscaling", true) ? lookup(
@@ -129,19 +129,19 @@ resource "google_container_node_pool" "node_pool" {
     }
   }
   node_config {
-    image_type                  = lookup(each.value, "image_type", "COS_CONTAINERD")
-    machine_type                = lookup(each.value, "machine_type", "e2-medium")
-    min_cpu_platform            = lookup(each.value, "min_cpu_platform", "")
-    local_ssd_count = lookup(each.value, "local_ssd_count", 0)
-    disk_size_gb    = lookup(each.value, "disk_size_gb", 30)
-    disk_type       = lookup(each.value, "disk_type", "pd-standard")
-    service_account = var.service_account
-    preemptible = lookup(each.value, "preemptible", false)
-    spot        = lookup(each.value, "spot", false)
+    image_type       = lookup(each.value, "image_type", "COS_CONTAINERD")
+    machine_type     = lookup(each.value, "machine_type", "e2-medium")
+    min_cpu_platform = lookup(each.value, "min_cpu_platform", "")
+    local_ssd_count  = lookup(each.value, "local_ssd_count", 0)
+    disk_size_gb     = lookup(each.value, "disk_size_gb", 30)
+    disk_type        = lookup(each.value, "disk_type", "pd-standard")
+    service_account  = var.service_account
+    preemptible      = lookup(each.value, "preemptible", false)
+    spot             = lookup(each.value, "spot", false)
     labels = {
       environment = "prod"
     }
-     tags = ["kubernetes"]
+    tags = ["kubernetes"]
 
 
     dynamic "kubelet_config" {
@@ -150,21 +150,21 @@ resource "google_container_node_pool" "node_pool" {
         ["cpu_manager_policy", "cpu_cfs_quota", "cpu_cfs_quota_period", "pod_pids_limit"]
       )) != 0 ? [1] : []
       content {
-        cpu_manager_policy                     = lookup(each.value, "cpu_manager_policy", "static")
-        cpu_cfs_quota                          = lookup(each.value, "cpu_cfs_quota", null)
-        cpu_cfs_quota_period                   = lookup(each.value, "cpu_cfs_quota_period", null)
-        pod_pids_limit                         = lookup(each.value, "pod_pids_limit", null)
+        cpu_manager_policy   = lookup(each.value, "cpu_manager_policy", "static")
+        cpu_cfs_quota        = lookup(each.value, "cpu_cfs_quota", null)
+        cpu_cfs_quota_period = lookup(each.value, "cpu_cfs_quota_period", null)
+        pod_pids_limit       = lookup(each.value, "pod_pids_limit", null)
       }
     }
 
   }
 
-lifecycle {
-  ignore_changes = [
-    initial_node_count,
-    node_config[0].resource_labels["goog-gke-node-pool-provisioning-model"]
-  ]
-}
+  lifecycle {
+    ignore_changes = [
+      initial_node_count,
+      node_config[0].resource_labels["goog-gke-node-pool-provisioning-model"]
+    ]
+  }
   timeouts {
     create = lookup(var.timeouts, "create", "45m")
     update = lookup(var.timeouts, "update", "45m")

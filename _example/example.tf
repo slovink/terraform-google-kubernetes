@@ -5,7 +5,7 @@ provider "google" {
 }
 
 module "vpc" {
-  source  = "git::git@github.com:slovink/gcp-terraform-gcp-vpc.git"
+  source = "git::git@github.com:slovink/gcp-terraform-gcp-vpc.git"
 
   name                           = "vpc"
   environment                    = var.environment
@@ -16,17 +16,17 @@ module "vpc" {
 }
 
 module "subnet" {
-  source  = "git@github.com:slovink/terraform-gcp-subnet.git"
+  source = "git@github.com:slovink/terraform-gcp-subnet.git"
 
   name        = "subnet"
   environment = var.environment
   label_order = var.label_order
 
-  google_compute_subnetwork_enabled  = true
-  google_compute_firewall_enabled    = true
-  google_compute_router_nat_enabled  = true
-  module_enabled                     = true
-# ipv6_access_type                   = "EXTERNAL"
+  google_compute_subnetwork_enabled = true
+  google_compute_firewall_enabled   = true
+  google_compute_router_nat_enabled = true
+  module_enabled                    = true
+  # ipv6_access_type                   = "EXTERNAL"
   network                            = module.vpc.vpc_id
   project_id                         = ""
   private_ip_google_access           = true
@@ -43,7 +43,7 @@ module "subnet" {
 }
 
 module "Service-account" {
-  source  = "git::git@github.com:slovink/terraform-gcp-Service-account.git"
+  source = "git::git@github.com:slovink/terraform-gcp-Service-account.git"
 
 
   name        = "Service-account"
@@ -56,9 +56,9 @@ module "Service-account" {
 module "gke" {
   source = "../"
 
-  name                               = "gke"
-  environment                        = var.environment
-  label_order                        = var.label_order
+  name        = "gke"
+  environment = var.environment
+  label_order = var.label_order
 
   network                            = module.vpc.vpc_id
   subnetwork                         = module.subnet.id
