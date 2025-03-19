@@ -4,11 +4,11 @@
 
 locals {
 
-  location         = var.regional ? var.region : var.zones[0]
-  region           = var.regional ? var.region : join("-", slice(split("-", var.zones[0]), 0, 2))
-  zone_count       = length(var.zones)
-#  cluster_location = google_container_cluster.primary[0].location
-#  cluster_region   = var.regional ? var.region : join("-", slice(split("-", local.cluster_location), 0, 2))
+  location   = var.regional ? var.region : var.zones[0]
+  region     = var.regional ? var.region : join("-", slice(split("-", var.zones[0]), 0, 2))
+  zone_count = length(var.zones)
+  #  cluster_location = google_container_cluster.primary[0].location
+  #  cluster_region   = var.regional ? var.region : join("-", slice(split("-", local.cluster_location), 0, 2))
   cluster_network_policy = var.network_policy ? [{
     enabled  = true
     provider = var.network_policy_provider
@@ -26,12 +26,12 @@ locals {
   pod_all_ip_ranges          = var.cluster_ipv4_cidr
   cluster_subnet_cidr        = var.add_cluster_firewall_rules ? data.google_compute_subnetwork.gke_subnetwork[0].ip_cidr_range : null
   cluster_endpoint_for_nodes = var.master_ipv4_cidr_block
-#  node_locations             = var.regional ? coalescelist(compact(var.zones), try(sort(random_shuffle.available_zones[0].result), [])) : slice(var.zones, 1, length(var.zones))
-  node_pools                 = { for np in var.node_pools : np.name => np }
+  #  node_locations             = var.regional ? coalescelist(compact(var.zones), try(sort(random_shuffle.available_zones[0].result), [])) : slice(var.zones, 1, length(var.zones))
+  node_pools = { for np in var.node_pools : np.name => np }
 
-#  old_node_metadata_config_mapping = { GKE_METADATA_SERVER = "GKE_METADATA", EXPOSE = "GCE_METADATA" }
+  #  old_node_metadata_config_mapping = { GKE_METADATA_SERVER = "GKE_METADATA", EXPOSE = "GCE_METADATA" }
 
-#  cluster_node_metadata_config = var.node_metadata == "UNSPECIFIED" ? [] : [{
-#    mode = lookup(local.old_node_metadata_config_mapping, var.node_metadata, var.node_metadata)
-#  }]
+  #  cluster_node_metadata_config = var.node_metadata == "UNSPECIFIED" ? [] : [{
+  #    mode = lookup(local.old_node_metadata_config_mapping, var.node_metadata, var.node_metadata)
+  #  }]
 }
