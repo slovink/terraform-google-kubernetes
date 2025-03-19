@@ -28,31 +28,31 @@ variable "gcp_zone" {
   description = "Google Cloud zone"
 }
 
-variable "gcp_credentials" {
-  type        = string
-  default     = ""
-  sensitive   = true
-  description = "Google Cloud service account credentials"
-}
+#variable "gcp_credentials" {
+#  type        = string
+#  default     = ""
+#  sensitive   = true
+#  description = "Google Cloud service account credentials"
+#}
 
-variable "ip_cidr_range" {
-  type        = string
-  default     = "10.11.0.0/16"
-  description = "(Required) The range of internal addresses that are owned by this subnetwork. Provide this property when you create the subnetwork. For example, 10.0.0.0/8 or 192.168.0.0/16. Ranges must be unique and non-overlapping within a network. Only IPv4 is supported."
-}
+#variable "ip_cidr_range" {
+#  type        = string
+#  default     = "10.11.0.0/16"
+#  description = "(Required) The range of internal addresses that are owned by this subnetwork. Provide this property when you create the subnetwork. For example, 10.0.0.0/8 or 192.168.0.0/16. Ranges must be unique and non-overlapping within a network. Only IPv4 is supported."
+#}
 
-variable "location" {
-  description = "The location (region or zone) of the GKE cluster."
-  default     = "europe-west3"
-  type        = string
-}
+#variable "location" {
+#  description = "The location (region or zone) of the GKE cluster."
+#  default     = "europe-west3"
+#  type        = string
+#}
 
-variable "vpc_id" {
-  type    = string
-  default = ""
-}
+#variable "vpc_id" {
+#  type    = string
+#  default = ""
+#}
 
-variable "subnet_id" {
-  type    = string
-  default = ""
-}
+#variable "subnet_id" {
+#  type    = string
+#  default = ""
+#}
