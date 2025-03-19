@@ -27,12 +27,12 @@ variable "module_enabled" {
 }
 
 
-variable "project" {
-  type        = string
-  default     = ""
-  description = "The project ID to host the cluster in"
-
-}
+#variable "project" {
+#  type        = string
+#  default     = ""
+#  description = "The project ID to host the cluster in"
+#
+#}
 
 variable "project_id" {
   type        = string
@@ -116,23 +116,23 @@ variable "remove_default_node_pool" {
   description = "deletes the default node pool upon cluster creation."
 }
 
-variable "initial_node_count" {
-  type        = number
-  default     = 1
-  description = "The number of nodes to create in this cluster's default node pool."
-}
+#variable "initial_node_count" {
+#  type        = number
+#  default     = 1
+#  description = "The number of nodes to create in this cluster's default node pool."
+#}
 
-variable "google_container_node_pool_enabled" {
-  type        = bool
-  default     = true
-  description = "Flag to control the cluster_enabled creation."
-}
+#variable "google_container_node_pool_enabled" {
+#  type        = bool
+#  default     = true
+#  description = "Flag to control the cluster_enabled creation."
+#}
 
-variable "node_count" {
-  type        = number
-  default     = 1
-  description = "The number of nodes to create in this cluster's default node pool."
-}
+#variable "node_count" {
+#  type        = number
+#  default     = 1
+#  description = "The number of nodes to create in this cluster's default node pool."
+#}
 
 variable "service_account" {
   type        = string
@@ -153,11 +153,11 @@ variable "cluster_ipv4_cidr" {
   description = "The IP address range of the kubernetes pods in this cluster. Default is an automatically assigned CIDR."
 }
 
-variable "additional_ip_range_pods" {
-  type        = list(string)
-  description = "List of _names_ of the additional secondary subnet ip ranges to use for pods"
-  default     = []
-}
+#variable "additional_ip_range_pods" {
+#  type        = list(string)
+#  description = "List of _names_ of the additional secondary subnet ip ranges to use for pods"
+#  default     = []
+#}
 
 variable "release_channel" {
   type        = string
@@ -171,26 +171,26 @@ variable "enable_private_nodes" {
   default     = true
 }
 
-variable "enable_private_endpoint" {
-  type        = bool
-  description = "Whether the master's internal IP address is used as the cluster endpoint"
-  default     = false
-}
+#variable "enable_private_endpoint" {
+#  type        = bool
+#  description = "Whether the master's internal IP address is used as the cluster endpoint"
+#  default     = false
+#}
 
-variable "cluster_create_timeouts" {
-  type    = string
-  default = "40m"
-}
+#variable "cluster_create_timeouts" {
+#  type    = string
+#  default = "40m"
+#}
 
-variable "cluster_update_timeouts" {
-  type    = string
-  default = "40m"
-}
+#variable "cluster_update_timeouts" {
+#  type    = string
+#  default = "40m"
+#}
 
-variable "cluster_delete_timeouts" {
-  type    = string
-  default = "40m"
-}
+#variable "cluster_delete_timeouts" {
+#  type    = string
+#  default = "40m"
+#}
 
 variable "timeouts" {
   type        = map(string)
@@ -202,11 +202,11 @@ variable "timeouts" {
   }
 }
 
-variable "kubectl_config_path" {
-  description = "Path to the kubectl config file. Defaults to $HOME/.kube/config"
-  type        = string
-  default     = ""
-}
+#variable "kubectl_config_path" {
+#  description = "Path to the kubectl config file. Defaults to $HOME/.kube/config"
+#  type        = string
+#  default     = ""
+#}
 
 variable "firewall_priority" {
   type        = number

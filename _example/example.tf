@@ -5,7 +5,7 @@ provider "google" {
 }
 
 module "vpc" {
-  source = "git::git@github.com:slovink/gcp-terraform-gcp-vpc.git"
+  source = "git::git@github.com:slovink/gcp-terraform-gcp-vpc.git?ref=vinod"
 
   name                           = "vpc"
   environment                    = var.environment
@@ -16,7 +16,7 @@ module "vpc" {
 }
 
 module "subnet" {
-  source = "git@github.com:slovink/terraform-gcp-subnet.git"
+  source = "git@github.com:slovink/terraform-gcp-subnet.git?ref=test"
 
   name        = "subnet"
   environment = var.environment
@@ -43,7 +43,7 @@ module "subnet" {
 }
 
 module "Service-account" {
-  source = "git::git@github.com:slovink/terraform-gcp-Service-account.git"
+  source = "git::git@github.com:slovink/terraform-gcp-Service-account.git?ref=1.0.0"
 
 
   name        = "Service-account"

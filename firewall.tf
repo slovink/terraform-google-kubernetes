@@ -15,9 +15,11 @@ resource "google_compute_firewall" "intra_egress" {
   direction   = "EGRESS"
 
   destination_ranges = [
-    "${local.cluster_endpoint_for_nodes}",
-    "${local.cluster_subnet_cidr}",
-  "${local.pod_all_ip_ranges}"]
+    local.cluster_endpoint_for_nodes,
+    local.cluster_subnet_cidr,
+    local.pod_all_ip_ranges
+  ]
+
 
 
 
