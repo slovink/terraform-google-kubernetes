@@ -86,17 +86,16 @@ If you have found it worth your time, go ahead and give us a ★ on [our GitHub]
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.7.2 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | 5.45.0 |
-| <a name="requirement_null"></a> [null](#requirement\_null) | 3.2.2 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.5 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 3.50.0, < 5.11.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 5.45.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | >= 3.0.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 5.10.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.7.1 |
 
 ## Modules
 
@@ -108,14 +107,14 @@ If you have found it worth your time, go ahead and give us a ★ on [our GitHub]
 
 | Name | Type |
 |------|------|
-| [google_compute_firewall.intra_egress](https://registry.terraform.io/providers/hashicorp/google/5.45.0/docs/resources/compute_firewall) | resource |
-| [google_container_cluster.primary](https://registry.terraform.io/providers/hashicorp/google/5.45.0/docs/resources/container_cluster) | resource |
-| [google_container_node_pool.node_pool](https://registry.terraform.io/providers/hashicorp/google/5.45.0/docs/resources/container_node_pool) | resource |
+| [google_compute_firewall.intra_egress](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
+| [google_container_cluster.primary](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster) | resource |
+| [google_container_node_pool.node_pool](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool) | resource |
 | [random_shuffle.available_zones](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/shuffle) | resource |
-| [google_compute_subnetwork.gke_subnetwork](https://registry.terraform.io/providers/hashicorp/google/5.45.0/docs/data-sources/compute_subnetwork) | data source |
-| [google_compute_zones.available](https://registry.terraform.io/providers/hashicorp/google/5.45.0/docs/data-sources/compute_zones) | data source |
-| [google_container_engine_versions.region](https://registry.terraform.io/providers/hashicorp/google/5.45.0/docs/data-sources/container_engine_versions) | data source |
-| [google_container_engine_versions.zone](https://registry.terraform.io/providers/hashicorp/google/5.45.0/docs/data-sources/container_engine_versions) | data source |
+| [google_compute_subnetwork.gke_subnetwork](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_subnetwork) | data source |
+| [google_compute_zones.available](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_zones) | data source |
+| [google_container_engine_versions.region](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/container_engine_versions) | data source |
+| [google_container_engine_versions.zone](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/container_engine_versions) | data source |
 
 ## Inputs
 

@@ -26,6 +26,12 @@ variable "module_enabled" {
   description = "Flag to control the service_account_enabled creation."
 }
 
+#variable "managedby" {
+#  type        = string
+#  default     = "slovink"
+#  description = "ManagedBy, eg 'slovink'."
+#}
+
 
 #variable "project" {
 #  type        = string

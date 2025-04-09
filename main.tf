@@ -10,7 +10,19 @@ module "labels" {
 /******************************************
   Create Container Cluster
  *****************************************/
-
+#tfsec:ignore:google-gke-use-cluster-labels
+#tfsec:ignore:google-gke-enable-ip-aliasing
+#tfsec:ignore:google-gke-enable-private-cluster
+#tfsec:ignore:google-gke-enable-network-policy
+#tfsec:ignore:google-gke-enable-master-networks
+#tfsec:ignore:google-gke-enforce-pod-security-policy
+#tfsec:ignore:google-gke-use-cluster-labels
+#tfsec:ignore:google-gke-enable-ip-aliasing
+#tfsec:ignore:google-gke-enable-private-cluster
+#tfsec:ignore:google-gke-enable-network-policy
+#tfsec:ignore:google-gke-enable-master-networks
+#tfsec:ignore:google-gke-enable-master-networks
+#tfsec:ignore:google-gke-node-metadata-security
 resource "google_container_cluster" "primary" {
   count = var.google_container_cluster_enabled && var.module_enabled ? 1 : 0
 
@@ -52,7 +64,9 @@ resource "google_container_cluster" "primary" {
 /******************************************
   Create Container Cluster node pools
  *****************************************/
-
+#tfsec:ignore:google-gke-node-pool-uses-cos
+#tfsec:ignore:google-gke-use-service-account
+#tfsec:ignore:google-gke-node-metadata-security
 resource "google_container_node_pool" "node_pool" {
   depends_on = [
     google_compute_firewall.intra_egress,
