@@ -12,7 +12,7 @@ variable "label_order" {
 
 variable "gcp_project_id" {
   type        = string
-  default     = ""
+  default     = "slovink-hyperscaler"
   description = "Google Cloud project ID"
 }
 
@@ -55,4 +55,29 @@ variable "gcp_zone" {
 #variable "subnet_id" {
 #  type    = string
 #  default = ""
+#}
+
+
+#variable "gke_version" {
+#  description = "Kubernetes version"
+#  type        = string
+#  default     = "1.25.6-gke.1000"
+#}
+
+#variable "initial_node_count" {
+#  description = "Number of initial nodes"
+#  type        = number
+#  default     = 1
+#}
+
+#variable "node_count" {
+#  description = "Number of nodes in node pool"
+#  type        = number
+#  default     = 1
+#}
+
+#variable "cluster_name" {
+#  description = "GKE cluster name"
+#  type        = string
+#  default     = "test-gke"
 #}

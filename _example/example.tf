@@ -1,3 +1,4 @@
+
 provider "google" {
   project = var.gcp_project_id
   region  = var.gcp_region
@@ -5,7 +6,7 @@ provider "google" {
 }
 
 module "vpc" {
-  source = "git::git@github.com:slovink/gcp-terraform-gcp-vpc.git?ref=vinod"
+  source = "git::git@github.com:slovink/gcp-terraform-gcp-vpc.git?ref=1.0.0"
 
   name                           = "vpc"
   environment                    = var.environment
@@ -16,7 +17,7 @@ module "vpc" {
 }
 
 module "subnet" {
-  source = "git@github.com:slovink/terraform-gcp-subnet.git?ref=test"
+  source = "git@github.com:slovink/terraform-gcp-subnet.git?ref=1.0.0"
 
   name        = "subnet"
   environment = var.environment

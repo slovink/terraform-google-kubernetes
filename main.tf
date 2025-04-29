@@ -1,5 +1,5 @@
 module "labels" {
-  source = "git::https://github.com/slovink/terraform-google-labels.git?ref=feature/precommit-134"
+  source = "git::https://github.com/slovink/terraform-google-labels.git?ref=add-precommit-136"
 
   name        = var.name
   environment = var.environment
