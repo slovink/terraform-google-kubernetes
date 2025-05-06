@@ -72,7 +72,7 @@ variable "subnetwork" {
 variable "subnetworkName" {
   type        = string
   description = "The subnetwork to host the cluster in (required)"
-  default = "kubernetes-subnet"
+  default     = "kubernetes-subnet"
 }
 
 variable "kubernetes_version" {
