@@ -8,7 +8,14 @@ locals {
   region           = var.regional ? var.region : join("-", slice(split("-", var.zones[0]), 0, 2))
   zone_count       = length(var.zones)
   cluster_location = google_container_cluster.primary[*].location
-  cluster_region   = var.regional ? var.region : ( local.cluster_location != null && can(split("_", local.cluster_location[0])) ? join("_", slice(split("_", local.cluster_location[0]), 0, 2)) : null)
+  cluster_region = var.regional ? var.region : (
+  local.cluster_location != null && can(local.cluster_location[0]) ? (
+  length(split("_", local.cluster_location[0])) >= 2 ?
+  join("_", slice(split("_", local.cluster_location[0]), 0, 2)) :
+  (length(split("-", local.cluster_location[0])) >= 2 ?
+  join("-", slice(split("-", local.cluster_location[0]), 0, 2)) :
+  null)
+  ) : null)
   cluster_network_policy = var.network_policy ? [{
     enabled  = true
     provider = var.network_policy_provider
