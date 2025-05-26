@@ -10,7 +10,7 @@ resource "google_compute_firewall" "intra_egress" {
   name        = "gke-${substr(var.name, 0, min(36, length(var.name)))}-intra-cluster-egress"
   description = "Managed by terraform gke module: Allow pods to communicate with each other and the master"
   project     = var.project_id
-  network     = var.network
+  network     = data.google_compute_subnetwork.gke_subnetwork
   priority    = var.firewall_priority
   direction   = "EGRESS"
 
