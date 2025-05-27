@@ -161,10 +161,9 @@ variable "network" {
   description = "A reference (self link) to the VPC network to host the cluster in"
 }
 
-variable "subnetwork" {
-  type        = string
-  default     = ""
-  description = "A reference (self link) to the subnetwork to host the cluster in"
+variable "subnetwork_name" {
+  type    = string
+  default = "kubernetes-subnet-usa-subnet-production"
 }
 
 variable "min_master_version" {

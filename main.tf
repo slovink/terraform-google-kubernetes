@@ -30,7 +30,7 @@ resource "google_container_cluster" "primary" {
   name                     = format("%s", module.labels.id)
   location                 = var.location
   network                  = var.network
-  subnetwork               = var.subnetwork
+  subnetwork               = var.subnetwork_name
   remove_default_node_pool = var.remove_default_node_pool
   initial_node_count       = var.initial_node_count
   min_master_version       = var.min_master_version
