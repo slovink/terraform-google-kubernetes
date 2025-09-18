@@ -88,13 +88,14 @@ If you have found it worth your time, go ahead and give us a ★ on [our GitHub]
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14, < 2.0 |
 | <a name="requirement_google"></a> [google](#requirement\_google) | >= 4.0, < 6.0 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_google"></a> [google](#provider\_google) | >= 4.0, < 6.0 |
-| <a name="provider_null"></a> [null](#provider\_null) | n/a |
+| <a name="provider_null"></a> [null](#provider\_null) | ~> 3.2 |
 
 ## Modules
 
