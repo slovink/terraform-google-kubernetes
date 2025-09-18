@@ -86,22 +86,21 @@ If you have found it worth your time, go ahead and give us a ★ on [our GitHub]
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3, < 2.0 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 5.10 |
-| <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.2 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14, < 2.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 3.50, < 5.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | ~> 5.10 |
-| <a name="provider_null"></a> [null](#provider\_null) | ~> 3.2 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 3.50, < 5.0 |
+| <a name="provider_null"></a> [null](#provider\_null) | n/a |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_labels"></a> [labels](#module\_labels) | git::https://github.com/slovink/terraform-google-labels.git | n/a |
+| <a name="module_labels"></a> [labels](#module\_labels) | git::https://github.com/slovink/terraform-google-labels.git | add-precommit-136 |
 
 ## Resources
 
