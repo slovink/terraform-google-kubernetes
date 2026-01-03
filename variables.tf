@@ -229,12 +229,15 @@ variable "node_pools" {
   type        = list(map(any))
   description = "List of maps containing node pools"
 
-  default = [
-    {
-      name = "default-node-pool"
-    },
-  ]
-}
+default = [
+  {
+    name         = "default-node-pool"
+    machine_type = "e2-medium"
+    disk_type    = "pd-standard"
+    disk_size_gb = 30
+    image_type   = "COS_CONTAINERD"
+  },
+]
 
 
 variable "node_metadata" {
