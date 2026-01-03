@@ -235,7 +235,7 @@ default = [
     machine_type = "e2-medium"
     disk_type    = "pd-standard"
     disk_size_gb = 30
-    image_type   = "COS_CONTAINERD"
+    image_type   = "UBUNTU_CONTAINERD"
   },
 ]
 
