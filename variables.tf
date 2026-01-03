@@ -236,7 +236,7 @@ default = [
     disk_type    = "pd-standard"
     disk_size_gb = 30
     image_type   = "UBUNTU_CONTAINERD"
-  },
+  }
 ]
 
 
