@@ -64,11 +64,7 @@ resource "google_container_node_pool" "node_pool" {
   cluster        = join("", google_container_cluster.primary[*].id)
   node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", each.value["node_locations"]) : null
 
-  version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade) ? "" : lookup(
-    each.value,
-    "version",
-    google_container_cluster.primary[0].min_master_version,
-  )
+  version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade) ? google_container_cluster.primary[0].min_master_version : lookup(each.value, "version", google_container_cluster.primary[0].min_master_version)
 
   initial_node_count = lookup(each.value, "autoscaling", true) ? lookup(
     each.value,
@@ -160,11 +156,12 @@ resource "google_container_node_pool" "node_pool" {
   }
 
   lifecycle {
-    ignore_changes = [
-      initial_node_count,
-      node_config[0].resource_labels["goog-gke-node-pool-provisioning-model"]
-    ]
-  }
+  ignore_changes = [
+    initial_node_count,
+    node_config[0].resource_labels,
+  ]
+}
+
   timeouts {
     create = lookup(var.timeouts, "create", "45m")
     update = lookup(var.timeouts, "update", "45m")

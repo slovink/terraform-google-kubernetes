@@ -42,17 +42,6 @@ module "subnet" {
   secondary_ip_ranges                = [{ "range_name" : "services", "ip_cidr_range" : "10.1.0.0/16" }, { "range_name" : "pods", "ip_cidr_range" : "10.3.0.0/16" }]
 }
 
-module "Service-account" {
-  source = "git::git@github.com:slovink/terraform-gcp-Service-account.git"
-
-
-  name        = "Service-account"
-  environment = var.environment
-  label_order = var.label_order
-
-  service_account_enabled = true
-}
-
 module "gke" {
   source = "../"
 
