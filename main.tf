@@ -158,9 +158,11 @@ resource "google_container_node_pool" "node_pool" {
   lifecycle {
   ignore_changes = [
     initial_node_count,
-    node_config[0].resource_labels,
-  ]
-}
+    version,
+    management[0].auto_upgrade,
+    management[0].auto_repair,
+   ]
+ }
 
   timeouts {
     create = lookup(var.timeouts, "create", "45m")
