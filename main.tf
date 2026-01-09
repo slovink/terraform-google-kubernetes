@@ -134,11 +134,11 @@ resource "google_container_node_pool" "node_pool" {
   # -------------------------------
   # ✅ LIFECYCLE (FIXED)
   # -------------------------------
-  lifecycle {
-    ignore_changes = [
-      initial_node_count
-    ]
-  }
+#  lifecycle {
+#    ignore_changes = [
+#      initial_node_count
+#    ]
+#  }
 
   timeouts {
     create = lookup(var.timeouts, "create", "45m")
