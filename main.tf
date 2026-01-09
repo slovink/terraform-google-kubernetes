@@ -73,7 +73,6 @@ resource "google_container_node_pool" "node_pool" {
   ) : null
 
 
-  node_count = lookup(each.value, "autoscaling", true) ? null : lookup(each.value, "node_count", 1)
 
   dynamic "autoscaling" {
     for_each = lookup(each.value, "autoscaling", true) ? [each.value] : []
@@ -155,20 +154,12 @@ resource "google_container_node_pool" "node_pool" {
 
   }
 
- lifecycle {
+  lifecycle {
   ignore_changes = [
     initial_node_count,
-
-    node_config[0].labels,
-    node_config[0].tags,
-    node_config[0].image_type,
-    node_config[0].disk_size_gb,
-    node_config[0].disk_type,
-    node_config[0].preemptible,
-    node_config[0].spot
-   ]
-
-  create_before_destroy = false
+    node_config,
+    autoscaling
+  ]
  }
 
   timeouts {
