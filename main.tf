@@ -72,8 +72,6 @@ resource "google_container_node_pool" "node_pool" {
     lookup(each.value, "min_count", 1)
   ) : null
 
-
-
   dynamic "autoscaling" {
     for_each = lookup(each.value, "autoscaling", true) ? [each.value] : []
     content {
@@ -105,24 +103,33 @@ resource "google_container_node_pool" "node_pool" {
     auto_upgrade = lookup(each.value, "auto_upgrade", local.default_auto_upgrade)
   }
 
+
   upgrade_settings {
-    strategy        = lookup(each.value, "strategy", "SURGE")
-    max_surge       = lookup(each.value, "strategy", "SURGE") == "SURGE" ? lookup(each.value, "max_surge", 1) : null
-    max_unavailable = lookup(each.value, "strategy", "SURGE") == "SURGE" ? lookup(each.value, "max_unavailable", 0) : null
+    strategy = lookup(each.value, "strategy", "SURGE")
+
+
+    max_surge = lookup(each.value, "strategy", "SURGE") == "SURGE" ?
+    lookup(each.value, "max_surge", 1) :
+    0
+    max_unavailable = lookup(each.value, "strategy", "SURGE") == "SURGE" ?
+    lookup(each.value, "max_unavailable", 0) :
+    0
 
     dynamic "blue_green_settings" {
       for_each = lookup(each.value, "strategy", "SURGE") == "BLUE_GREEN" ? [1] : []
       content {
-        node_pool_soak_duration = lookup(each.value, "node_pool_soak_duration", null)
+
+        node_pool_soak_duration = lookup(each.value, "node_pool_soak_duration", "10s")
 
         standard_rollout_policy {
-          batch_soak_duration = lookup(each.value, "batch_soak_duration", null)
-          batch_percentage    = lookup(each.value, "batch_percentage", null)
-          batch_node_count    = lookup(each.value, "batch_node_count", null)
+          batch_soak_duration = lookup(each.value, "batch_soak_duration", "10s")
+          batch_percentage    = lookup(each.value, "batch_percentage", 20)
+          batch_node_count    = lookup(each.value, "batch_node_count", 1)
         }
       }
     }
   }
+
   node_config {
     image_type       = lookup(each.value, "image_type", "COS_CONTAINERD")
     machine_type     = lookup(each.value, "machine_type", "e2-medium")
@@ -133,11 +140,27 @@ resource "google_container_node_pool" "node_pool" {
     service_account  = var.service_account
     preemptible      = lookup(each.value, "preemptible", false)
     spot             = lookup(each.value, "spot", false)
-    labels = {
-      environment = "prod"
-    }
-    tags = ["kubernetes"]
 
+
+    labels = merge(
+      {
+        environment = "prod"
+        terraform   = "true"
+      },
+      lookup(each.value, "additional_labels", {})
+    )
+
+    tags = concat(
+      ["kubernetes", "gke"],
+      lookup(each.value, "additional_tags", [])
+    )
+
+
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+    ]
 
     dynamic "kubelet_config" {
       for_each = length(setintersection(
@@ -154,10 +177,13 @@ resource "google_container_node_pool" "node_pool" {
 
   }
 
+
   lifecycle {
+    prevent_destroy = true
+
     ignore_changes = [
       initial_node_count,
-      node_count
+      version,
     ]
   }
 
@@ -166,5 +192,4 @@ resource "google_container_node_pool" "node_pool" {
     update = lookup(var.timeouts, "update", "45m")
     delete = lookup(var.timeouts, "delete", "45m")
   }
-
 }
