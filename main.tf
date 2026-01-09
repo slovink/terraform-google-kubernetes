@@ -63,8 +63,8 @@ resource "google_container_node_pool" "node_pool" {
   location       = var.location
   cluster        = join("", google_container_cluster.primary[*].id)
 
-  node_locations = lookup(each.value, "node_locations", "") != "" ?
-  split(",", each.value["node_locations"]) : null
+  node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", lookup(each.value, "node_locations", "")) : null
+
 
   version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade)
   ? google_container_cluster.primary[0].min_master_version
