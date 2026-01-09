@@ -66,9 +66,7 @@ resource "google_container_node_pool" "node_pool" {
   node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", lookup(each.value, "node_locations", "")) : null
 
 
-  version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade)
-  ? google_container_cluster.primary[0].min_master_version
-  : lookup(each.value, "version", google_container_cluster.primary[0].min_master_version)
+  version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade) ? google_container_cluster.primary[0].min_master_version : lookup(each.value, "version", google_container_cluster.primary[0].min_master_version)
 
   # -------------------------------
   # CREATE TIME ONLY
