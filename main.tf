@@ -1,4 +1,3 @@
-
 module "labels" {
   source = "git::https://github.com/slovink/terraform-google-labels.git"
 
@@ -156,17 +155,10 @@ resource "google_container_node_pool" "node_pool" {
   }
 
   lifecycle {
-    prevent_destroy = true
-
     ignore_changes = [
       initial_node_count,
-
-      autoscaling,
-
-      node_config[0].labels,
-      node_config[0].tags,
-
-      version
+      node_config,
+      autoscaling
     ]
   }
 
