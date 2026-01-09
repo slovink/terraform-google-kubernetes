@@ -155,12 +155,19 @@ resource "google_container_node_pool" "node_pool" {
   }
 
   lifecycle {
+  prevent_destroy = true
+
   ignore_changes = [
     initial_node_count,
-    node_config,
-    autoscaling
+
+    autoscaling,
+
+    node_config[0].labels,
+    node_config[0].tags,
+
+    version
   ]
- }
+}
 
   timeouts {
     create = lookup(var.timeouts, "create", "45m")
