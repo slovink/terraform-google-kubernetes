@@ -155,13 +155,20 @@ resource "google_container_node_pool" "node_pool" {
 
   }
 
-  lifecycle {
+ lifecycle {
   ignore_changes = [
     initial_node_count,
-    version,
-    management[0].auto_upgrade,
-    management[0].auto_repair,
+
+    node_config[0].labels,
+    node_config[0].tags,
+    node_config[0].image_type,
+    node_config[0].disk_size_gb,
+    node_config[0].disk_type,
+    node_config[0].preemptible,
+    node_config[0].spot
    ]
+
+  create_before_destroy = false
  }
 
   timeouts {
