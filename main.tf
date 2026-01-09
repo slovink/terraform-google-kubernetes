@@ -71,18 +71,12 @@ resource "google_container_node_pool" "node_pool" {
   # -------------------------------
   # CREATE TIME ONLY
   # -------------------------------
-  initial_node_count = lookup(each.value, "autoscaling", true) ? lookup(
-    each.value,
-    "initial_node_count",
-    lookup(each.value, "min_count", 1)
-  ) : null
+  initial_node_count = lookup(each.value, "autoscaling", true) ? lookup(each.value, "initial_node_count", lookup(each.value, "min_count", 1)) : null
 
   # -------------------------------
   # SCALE FIX (THIS WAS MISSING)
   # -------------------------------
-  node_count = lookup(each.value, "autoscaling", true)
-  ? null
-  : lookup(each.value, "node_count", null)
+  node_count = lookup(each.value, "autoscaling", true) ? null : lookup(each.value, "node_count", null)
 
   # -------------------------------
   # AUTOSCALING
