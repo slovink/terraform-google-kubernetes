@@ -137,7 +137,13 @@ resource "google_container_node_pool" "node_pool" {
       environment = "prod"
     }
     tags = ["kubernetes"]
-
+    shielded_instance_config {
+      enable_integrity_monitoring = true
+      enable_secure_boot          = false
+    }
+    workload_metadata_config {
+      mode = "GKE_METADATA"
+    }
 
     dynamic "kubelet_config" {
       for_each = length(setintersection(
@@ -155,13 +161,14 @@ resource "google_container_node_pool" "node_pool" {
   }
 
   lifecycle {
+    prevent_destroy = true
     ignore_changes = [
       initial_node_count,
-      node_config,
-      autoscaling
+      autoscaling,
+      management[0].auto_upgrade,
+      version
     ]
   }
-
   timeouts {
     create = lookup(var.timeouts, "create", "45m")
     update = lookup(var.timeouts, "update", "45m")
