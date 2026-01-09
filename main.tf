@@ -160,9 +160,8 @@ resource "google_container_node_pool" "node_pool" {
   ignore_changes = [
     initial_node_count,
     version,
-    management.auto_upgrade,
-    autoscaling    
-    
+    autoscaling,
+    management[0].auto_upgrade
   ]
 }
 
