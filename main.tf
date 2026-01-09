@@ -77,7 +77,7 @@ resource "google_container_node_pool" "node_pool" {
   # -------------------------------
   # ✅ MANUAL SCALING (ADD THIS)
   # -------------------------------
-  node_count = lookup(each.value, "node_count", 5)
+  node_count = lookup(each.value, "autoscaling", true) ? null : lookup(each.value, "node_count", 5)
 
   # -------------------------------
   # ❌ AUTOSCALING DISABLED
@@ -131,14 +131,11 @@ resource "google_container_node_pool" "node_pool" {
     tags = ["kubernetes"]
   }
 
-  # -------------------------------
-  # ✅ LIFECYCLE (FIXED)
-  # -------------------------------
-#  lifecycle {
-#    ignore_changes = [
-#      initial_node_count
-#    ]
-#  }
+  lifecycle {
+    ignore_changes = [
+      initial_node_count
+    ]
+  }
 
   timeouts {
     create = lookup(var.timeouts, "create", "45m")
