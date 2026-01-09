@@ -52,84 +52,97 @@ resource "google_container_cluster" "primary" {
 /******************************************
   Create Container Cluster node pools
  *****************************************/
-
 resource "google_container_node_pool" "node_pool" {
   depends_on = [
     google_compute_firewall.intra_egress,
   ]
+
   for_each       = local.node_pools
   name           = each.key
   project        = var.project_id
   location       = var.location
   cluster        = join("", google_container_cluster.primary[*].id)
-  node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", each.value["node_locations"]) : null
 
-  version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade) ? google_container_cluster.primary[0].min_master_version : lookup(each.value, "version", google_container_cluster.primary[0].min_master_version)
+  node_locations = lookup(each.value, "node_locations", "") != "" ?
+  split(",", each.value["node_locations"]) : null
 
+  version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade)
+  ? google_container_cluster.primary[0].min_master_version
+  : lookup(each.value, "version", google_container_cluster.primary[0].min_master_version)
+
+  # -------------------------------
+  # CREATE TIME ONLY
+  # -------------------------------
   initial_node_count = lookup(each.value, "autoscaling", true) ? lookup(
     each.value,
     "initial_node_count",
     lookup(each.value, "min_count", 1)
   ) : null
 
+  # -------------------------------
+  # SCALE FIX (THIS WAS MISSING)
+  # -------------------------------
+  node_count = lookup(each.value, "autoscaling", true)
+  ? null
+  : lookup(each.value, "node_count", null)
+
+  # -------------------------------
+  # AUTOSCALING
+  # -------------------------------
   dynamic "autoscaling" {
     for_each = lookup(each.value, "autoscaling", true) ? [each.value] : []
     content {
-      min_node_count       = contains(keys(autoscaling.value), "total_min_count") ? null : lookup(autoscaling.value, "min_count", 1)
-      max_node_count       = contains(keys(autoscaling.value), "total_max_count") ? null : lookup(autoscaling.value, "max_count", 100)
+      min_node_count       = contains(keys(autoscaling.value), "total_min_count")
+      ? null
+      : lookup(autoscaling.value, "min_count", 1)
+
+      max_node_count       = contains(keys(autoscaling.value), "total_max_count")
+      ? null
+      : lookup(autoscaling.value, "max_count", 100)
+
       location_policy      = lookup(autoscaling.value, "location_policy", null)
       total_min_node_count = lookup(autoscaling.value, "total_min_count", null)
       total_max_node_count = lookup(autoscaling.value, "total_max_count", null)
     }
   }
 
-  dynamic "placement_policy" {
-    for_each = length(lookup(each.value, "placement_policy", "")) > 0 ? [each.value] : []
-    content {
-      type = lookup(placement_policy.value, "placement_policy", null)
-    }
-  }
-
-  dynamic "network_config" {
-    for_each = length(lookup(each.value, "pod_range", "")) > 0 ? [each.value] : []
-    content {
-      pod_range            = lookup(network_config.value, "pod_range", null)
-      enable_private_nodes = var.enable_private_nodes
-    }
-  }
-
+  # -------------------------------
+  # MANAGEMENT
+  # -------------------------------
   management {
     auto_repair  = lookup(each.value, "auto_repair", true)
     auto_upgrade = lookup(each.value, "auto_upgrade", local.default_auto_upgrade)
   }
 
-  
+  # -------------------------------
+  # UPGRADE SETTINGS
+  # -------------------------------
   upgrade_settings {
-    strategy = lookup(each.value, "strategy", "SURGE")
-    
-   
-    max_surge = lookup(each.value, "strategy", "SURGE") == "SURGE" ? 
-      lookup(each.value, "max_surge", 1) : 
-      0  
-    max_unavailable = lookup(each.value, "strategy", "SURGE") == "SURGE" ? 
-      lookup(each.value, "max_unavailable", 0) : 
-      0  
+    strategy        = lookup(each.value, "strategy", "SURGE")
+    max_surge       = lookup(each.value, "strategy", "SURGE") == "SURGE"
+    ? lookup(each.value, "max_surge", 1)
+    : null
+    max_unavailable = lookup(each.value, "strategy", "SURGE") == "SURGE"
+    ? lookup(each.value, "max_unavailable", 0)
+    : null
 
     dynamic "blue_green_settings" {
       for_each = lookup(each.value, "strategy", "SURGE") == "BLUE_GREEN" ? [1] : []
       content {
-        
-        node_pool_soak_duration = lookup(each.value, "node_pool_soak_duration", "10s")
+        node_pool_soak_duration = lookup(each.value, "node_pool_soak_duration", null)
 
         standard_rollout_policy {
-          batch_soak_duration = lookup(each.value, "batch_soak_duration", "10s")
-          batch_percentage    = lookup(each.value, "batch_percentage", 20)
-          batch_node_count    = lookup(each.value, "batch_node_count", 1)
+          batch_soak_duration = lookup(each.value, "batch_soak_duration", null)
+          batch_percentage    = lookup(each.value, "batch_percentage", null)
+          batch_node_count    = lookup(each.value, "batch_node_count", null)
         }
       }
     }
   }
-  
+
+  # -------------------------------
+  # NODE CONFIG
+  # -------------------------------
   node_config {
     image_type       = lookup(each.value, "image_type", "COS_CONTAINERD")
     machine_type     = lookup(each.value, "machine_type", "e2-medium")
@@ -140,33 +153,19 @@ resource "google_container_node_pool" "node_pool" {
     service_account  = var.service_account
     preemptible      = lookup(each.value, "preemptible", false)
     spot             = lookup(each.value, "spot", false)
-    
-    
-    labels = merge(
-      {
-        environment = "prod"
-        terraform   = "true"
-      },
-      lookup(each.value, "additional_labels", {})
-    )
-    
-    tags = concat(
-      ["kubernetes", "gke"],
-      lookup(each.value, "additional_tags", [])
-    )
-    
-    
-    oauth_scopes = [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
-    ]
+
+    labels = {
+      environment = "prod"
+    }
+
+    tags = ["kubernetes"]
 
     dynamic "kubelet_config" {
       for_each = length(setintersection(
         keys(each.value),
         ["cpu_manager_policy", "cpu_cfs_quota", "cpu_cfs_quota_period", "pod_pids_limit"]
       )) != 0 ? [1] : []
+
       content {
         cpu_manager_policy   = lookup(each.value, "cpu_manager_policy", "static")
         cpu_cfs_quota        = lookup(each.value, "cpu_cfs_quota", null)
@@ -174,19 +173,21 @@ resource "google_container_node_pool" "node_pool" {
         pod_pids_limit       = lookup(each.value, "pod_pids_limit", null)
       }
     }
-
   }
 
-  
+  # -------------------------------
+  # LIFECYCLE (FIXED)
+  # -------------------------------
   lifecycle {
-    prevent_destroy = true
-
     ignore_changes = [
-      initial_node_count,    
-      version,              
+      initial_node_count,
+      node_config
     ]
   }
 
+  # -------------------------------
+  # TIMEOUTS
+  # -------------------------------
   timeouts {
     create = lookup(var.timeouts, "create", "45m")
     update = lookup(var.timeouts, "update", "45m")
