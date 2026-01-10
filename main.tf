@@ -72,20 +72,14 @@ resource "google_container_node_pool" "node_pool" {
   # -------------------------------
   # CREATE TIME ONLY
   # -------------------------------
-  initial_node_count = lookup(each.value, "initial_node_count", 4)
+  initial_node_count = null
 
   # -------------------------------
   # ✅ MANUAL SCALING (ADD THIS)
   # -------------------------------
-  node_count = lookup(each.value, "autoscaling", true) ? null : lookup(each.value, "node_count", 5)
+  node_count = lookup(each.value, "node_count", 4)
 
-  # -------------------------------
-  # ❌ AUTOSCALING DISABLED
-  # -------------------------------
-  dynamic "autoscaling" {
-    for_each = []   # <-- autoscaling OFF
-    content {}
-  }
+
 
   dynamic "placement_policy" {
     for_each = length(lookup(each.value, "placement_policy", "")) > 0 ? [each.value] : []
