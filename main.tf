@@ -129,10 +129,9 @@ resource "google_container_node_pool" "node_pool" {
       version,
       upgrade_settings,
       node_config,
-      labels,
-      tags,
     ]
   }
+
 
   timeouts {
     create = lookup(var.timeouts, "create", "45m")
