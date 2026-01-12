@@ -67,7 +67,7 @@ resource "google_container_node_pool" "node_pool" {
   node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", lookup(each.value, "node_locations", "")) : null
 
 
-  node_version = lookup(each.value, "version", google_container_cluster.primary[0].min_master_version)
+  version = lookup(each.value, "version", google_container_cluster.primary[0].min_master_version)
 
   # -------------------------------
   # CREATE TIME ONLY (KEEP AS IS)
@@ -126,7 +126,7 @@ resource "google_container_node_pool" "node_pool" {
   lifecycle {
     ignore_changes = [
       initial_node_count,
-      node_version,
+      version,
       upgrade_settings,
       node_config,
       labels,
