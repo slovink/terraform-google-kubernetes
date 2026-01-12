@@ -67,19 +67,17 @@ resource "google_container_node_pool" "node_pool" {
   node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", lookup(each.value, "node_locations", "")) : null
 
 
-  version = lookup(each.value, "auto_upgrade", local.default_auto_upgrade) ? google_container_cluster.primary[0].min_master_version : lookup(each.value, "version", google_container_cluster.primary[0].min_master_version)
+  node_version = lookup(each.value, "version", google_container_cluster.primary[0].min_master_version)
 
   # -------------------------------
-  # CREATE TIME ONLY
+  # CREATE TIME ONLY (KEEP AS IS)
   # -------------------------------
   initial_node_count = null
 
   # -------------------------------
-  # ✅ MANUAL SCALING (ADD THIS)
+  # ✅ MANUAL SCALING (PIPELINE / tfvars)
   # -------------------------------
   node_count = lookup(each.value, "node_count", 4)
-
-
 
   dynamic "placement_policy" {
     for_each = length(lookup(each.value, "placement_policy", "")) > 0 ? [each.value] : []
@@ -127,7 +125,12 @@ resource "google_container_node_pool" "node_pool" {
 
   lifecycle {
     ignore_changes = [
-      initial_node_count
+      initial_node_count,
+      node_version,
+      upgrade_settings,
+      node_config,
+      labels,
+      tags,
     ]
   }
 
@@ -137,3 +140,4 @@ resource "google_container_node_pool" "node_pool" {
     delete = lookup(var.timeouts, "delete", "45m")
   }
 }
+
