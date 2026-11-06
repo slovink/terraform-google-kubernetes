@@ -1,97 +1,142 @@
 module "labels" {
-  source = "git::https://github.com/slovink/terraform-google-labels.git?ref=add-precommit-136"
+  source = "git::https://github.com/slovink/terraform-google-labels.git"
 
   name        = var.name
   environment = var.environment
   label_order = var.label_order
-  managedby   = var.managedby
 }
 
-data "google_client_config" "current" {}
 
 /******************************************
   Create Container Cluster
  *****************************************/
-#tfsec:ignore:google-gke-use-cluster-labels
-#tfsec:ignore:google-gke-enable-ip-aliasing
-#tfsec:ignore:google-gke-enable-private-cluster
-#tfsec:ignore:google-gke-enable-network-policy
-#tfsec:ignore:google-gke-enable-master-networks
-#tfsec:ignore:google-gke-enforce-pod-security-policy
-#tfsec:ignore:google-gke-use-cluster-labels
-#tfsec:ignore:google-gke-enable-ip-aliasing
-#tfsec:ignore:google-gke-enable-private-cluster
-#tfsec:ignore:google-gke-enable-network-policy
-#tfsec:ignore:google-gke-enable-master-networks
-#tfsec:ignore:google-gke-enable-master-networks
-#tfsec:ignore:google-gke-node-metadata-security
+
 resource "google_container_cluster" "primary" {
-  count                    = var.cluster_enabled && var.module_enabled ? 1 : 0
-  name                     = format("%s", module.labels.id)
+  count = var.google_container_cluster_enabled && var.module_enabled ? 1 : 0
+
+  name                     = module.labels.id
   location                 = var.location
+  project                  = var.project_id
   network                  = var.network
   subnetwork               = var.subnetwork
   remove_default_node_pool = var.remove_default_node_pool
-  initial_node_count       = var.initial_node_count
-  min_master_version       = var.min_master_version
-  deletion_protection      = false
+  initial_node_count       = "1"
+  cluster_ipv4_cidr        = var.cluster_ipv4_cidr
+  min_master_version       = var.release_channel == null || var.release_channel == "UNSPECIFIED" ? local.master_version : var.kubernetes_version == "latest" ? null : var.kubernetes_version
+
+  dynamic "release_channel" {
+    for_each = local.release_channel
+
+    content {
+      channel = release_channel.value.channel
+    }
+  }
+
+  dynamic "network_policy" {
+    for_each = local.cluster_network_policy
+
+    content {
+      enabled  = network_policy.value.enabled
+      provider = network_policy.value.provider
+    }
+  }
+
+  private_cluster_config {
+    enable_private_nodes    = true
+    enable_private_endpoint = false # Master remains public
+    master_ipv4_cidr_block  = var.master_ipv4_cidr_block
+  }
+
 }
 
-#####==============================================================================
-#####A Manages a node pool in a Google Kubernetes Engine (GKE) cluster separately
-###### from the cluster control plane.
-#####==============================================================================
-#tfsec:ignore:google-gke-node-pool-uses-cos
-#tfsec:ignore:google-gke-use-service-account
-#tfsec:ignore:google-gke-node-metadata-security
+/******************************************
+  Create Container Cluster node pools
+ *****************************************/
 resource "google_container_node_pool" "node_pool" {
-  name               = format("%s", module.labels.id)
-  project            = data.google_client_config.current.project
-  location           = var.location
-  cluster            = join("", google_container_cluster.primary[*].id)
-  initial_node_count = var.initial_node_count
+  depends_on = [
+    google_compute_firewall.intra_egress,
+  ]
 
-  autoscaling {
-    min_node_count  = var.min_node_count
-    max_node_count  = var.max_node_count
-    location_policy = var.location_policy
+  for_each = local.node_pools
+
+  name     = each.key
+  project  = var.project_id
+  location = var.location
+  cluster  = join("", google_container_cluster.primary[*].id)
+
+  node_locations = lookup(each.value, "node_locations", "") != "" ? split(",", lookup(each.value, "node_locations", "")) : null
+
+
+  version = lookup(each.value, "version", google_container_cluster.primary[0].min_master_version)
+
+  # -------------------------------
+  # CREATE TIME ONLY (KEEP AS IS)
+  # -------------------------------
+  initial_node_count = null
+
+  # -------------------------------
+  # ✅ MANUAL SCALING (PIPELINE / tfvars)
+  # -------------------------------
+  node_count = lookup(each.value, "node_count", 4)
+
+  dynamic "placement_policy" {
+    for_each = length(lookup(each.value, "placement_policy", "")) > 0 ? [each.value] : []
+    content {
+      type = lookup(placement_policy.value, "placement_policy", null)
+    }
+  }
+
+  dynamic "network_config" {
+    for_each = length(lookup(each.value, "pod_range", "")) > 0 ? [each.value] : []
+    content {
+      pod_range            = lookup(network_config.value, "pod_range", null)
+      enable_private_nodes = var.enable_private_nodes
+    }
   }
 
   management {
-    auto_repair  = var.auto_repair
-    auto_upgrade = var.auto_upgrade
+    auto_repair  = lookup(each.value, "auto_repair", true)
+    auto_upgrade = lookup(each.value, "auto_upgrade", local.default_auto_upgrade)
+  }
+
+  upgrade_settings {
+    strategy        = lookup(each.value, "strategy", "SURGE")
+    max_surge       = lookup(each.value, "strategy", "SURGE") == "SURGE" ? lookup(each.value, "max_surge", 1) : null
+    max_unavailable = lookup(each.value, "strategy", "SURGE") == "SURGE" ? lookup(each.value, "max_unavailable", 0) : null
   }
 
   node_config {
-    image_type      = var.image_type
-    machine_type    = var.machine_type
-    service_account = var.service_account
-    disk_size_gb    = var.disk_size_gb
-    disk_type       = var.disk_type
-    preemptible     = var.preemptible
+    image_type       = lookup(each.value, "image_type", "COS_CONTAINERD")
+    machine_type     = lookup(each.value, "machine_type", "e2-medium")
+    min_cpu_platform = lookup(each.value, "min_cpu_platform", "")
+    local_ssd_count  = lookup(each.value, "local_ssd_count", 0)
+    disk_size_gb     = lookup(each.value, "disk_size_gb", 30)
+    disk_type        = lookup(each.value, "disk_type", "pd-standard")
+    service_account  = var.service_account
+    preemptible      = lookup(each.value, "preemptible", false)
+    spot             = lookup(each.value, "spot", false)
+
+    labels = {
+      environment = "prod"
+    }
+
+    tags = ["kubernetes"]
   }
 
   lifecycle {
-    ignore_changes        = [initial_node_count]
-    create_before_destroy = false
+    ignore_changes = [
+      initial_node_count,
+      version,
+      upgrade_settings,
+      node_config,
+    ]
   }
+
+
   timeouts {
-    create = var.cluster_create_timeouts
-    update = var.cluster_update_timeouts
-    delete = var.cluster_delete_timeouts
+    create = lookup(var.timeouts, "create", "45m")
+    update = lookup(var.timeouts, "update", "45m")
+    delete = lookup(var.timeouts, "delete", "45m")
   }
 }
 
-#####==============================================================================
-##### A The null_resource resource implements the standard resource lifecycle but
-###### takes no further action.
-#####==============================================================================
-resource "null_resource" "configure_kubectl" {
-  provisioner "local-exec" {
-    command = "gcloud container clusters get-credentials ${format("%s", module.labels.id)} --region ${var.region} --project ${data.google_client_config.current.project}"
-    environment = {
-      KUBECONFIG = var.kubectl_config_path != "" ? var.kubectl_config_path : ""
-    }
-  }
-  depends_on = [google_container_node_pool.node_pool]
-}
